@@ -1,35 +1,41 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { FaqWidget } from "./features/faq/components/FaqWidget/FaqWidget";
+
+const faqs = [
+  {
+    question: "How do I enable the App Embed?",
+    answer: (
+      <ul>
+        <li>Go to Shopify admin → Online Store → Customize</li>
+        <li>Open the App embeds tab</li>
+        <li>Toggle on Libautech Smart Upsell</li>
+        <li>Click Save to make it live</li>
+      </ul>
+    ),
+  },
+  {
+    question: "Can I use the app with PageFly?",
+    answer: (
+      <p>
+        Yes, it works with PageFly, GemPages, and Shogun.{" "}
+        <a
+          href="https://libautech.crisp.help/en/article/can-i-use-the-app-with-theme-builders-pagefly-gempages-shogun-1yczadx/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="underline text-blue-600"
+        >
+          Learn more
+        </a>
+      </p>
+    ),
+  },
+];
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div className="p-6 max-w-2xl mx-auto">
+      <FaqWidget faqs={faqs} />
+    </div>
+  );
 }
 
-export default App
+export default App;
