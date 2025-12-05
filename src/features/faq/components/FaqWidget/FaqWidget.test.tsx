@@ -27,13 +27,17 @@ describe("FaqWidget", () => {
 
     // Initially collapsed
     expect(answerContainer).toHaveAttribute("aria-hidden", "true");
+    expect(answerContainer).not.toBeVisible();
 
     fireEvent.click(firstQuestion);
     expect(answerContainer).toHaveAttribute("aria-hidden", "false");
+    expect(answerContainer).toBeVisible();
 
     fireEvent.click(firstQuestion);
     expect(answerContainer).toHaveAttribute("aria-hidden", "true");
+    expect(answerContainer).not.toBeVisible();
   });
+
 
   it("only allows one FAQ open at a time", () => {
     renderWithPolaris(<FaqWidget faqs={faqs} />);
