@@ -4,6 +4,18 @@ import type { FaqItem } from "./FaqWidget";
 import { TextContainer, List, Text } from "@shopify/polaris";
 import { t } from "i18next";
 
+/**
+ * Example wrapper for the FaqWidget component.
+ *
+ * Provides sample FAQ data (localized via i18next) and renders
+ * the FaqWidget for demonstration purposes in the sandbox.
+ *
+ * @returns JSX.Element - A rendered FAQ widget with example questions/answers
+ *
+ * @example
+ * <FaqWidgetExample />
+ */
+
 export const FaqWidgetExample: React.FC = () => {
   const faqs: FaqItem[] = [
     {

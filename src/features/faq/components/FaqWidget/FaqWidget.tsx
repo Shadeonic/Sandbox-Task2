@@ -1,14 +1,15 @@
 import React, { useState, useCallback } from "react";
 import {
-  LegacyCard,
-  LegacyStack,
+  Card,
+  BlockStack,
+  InlineStack,
+  Text,
   Collapsible,
   TextContainer,
-  InlineStack,
-  BlockStack,
-  Text,
+  Divider,
+  Icon,
 } from "@shopify/polaris";
-import { ChevronDown } from "lucide-react";
+import { ChevronDownIcon } from "@shopify/polaris-icons";
 import { t } from "i18next";
 import { sendEvent } from "../../../../utils/sendEvent";
 
@@ -24,17 +25,10 @@ interface FaqWidgetProps {
 /**
  * FAQWidget component
  *
- * Renders a collapsible list of FAQ items.
- *
- * Props:
- * - `faqs`: An array of FAQ items, each with a `question` and `answer`.
- *
- * Behavior:
- * - Tracks which FAQ item is currently open.
- * - Sends a mock `faq_question_click` event when a question is toggled open.
- * - Uses Polaris layout components and supports i18n via `t("FAQ.…")`.
+ * Renders a collapsible list of FAQ items using Polaris components.
+ * - Accessible: supports keyboard navigation and screen readers.
+ * - Animated chevron: rotates when a section is expanded.
  */
-
 export const FaqWidget: React.FC<FaqWidgetProps> = ({ faqs }) => {
   const [openIdx, setOpenIdx] = useState<number | null>(null);
 
@@ -48,38 +42,59 @@ export const FaqWidget: React.FC<FaqWidgetProps> = ({ faqs }) => {
         {t("FAQ.faq")}
       </Text>
       <Text as="p">{t("FAQ.quick")}</Text>
-      <LegacyCard sectioned>
-        <LegacyStack vertical>
+      <Card>
+        <BlockStack gap="200">
           {faqs.map((faq, index) => (
             <div key={index}>
+              {/* Clickable area */}
               <div
-                className="w-full hover:underline cursor-pointer"
+                role="button"
+                tabIndex={0}
                 onClick={() => {
                   handleToggle(index);
+                  sendEvent("faq_question_click", { question: faq.question });
+                }}
+                onKeyDown={(e: React.KeyboardEvent<HTMLDivElement>) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    handleToggle(index);
                     sendEvent("faq_question_click", { question: faq.question });
+                  }
+                }}
+                aria-expanded={index === openIdx}
+                aria-controls={`faq-${index}`}
+                style={{
+                  cursor: "pointer",
+                  padding: "8px 0",
+                  width: "100%",
+                  outline: "none",
                 }}
               >
-                <div className="w-full">
-                    <InlineStack align="space-between">
-                    <h3 className="font-semibold">{faq.question}</h3>
-                    <span
-                        className={`transition-transform duration-300 ${
-                        index === openIdx ? "rotate-180" : ""
-                        }`}
-                    >
-                        <ChevronDown height={20} />
-                    </span>
-                    </InlineStack>
-                </div>
+                <InlineStack align="space-between" blockAlign="center">
+                  <Text as="h3" variant="headingMd" fontWeight="semibold">
+                    {faq.question}
+                  </Text>
+                  <span
+                    style={{
+                      display: "inline-block",
+                      transition: "transform 0.3s",
+                      transform: index === openIdx ? "rotate(180deg)" : "rotate(0deg)",
+                    }}
+                  >
+                    <Icon source={ChevronDownIcon} tone="base" />
+                  </span>
+                </InlineStack>
               </div>
+
               <Collapsible id={`faq-${index}`} open={index === openIdx}>
                 <TextContainer>{faq.answer}</TextContainer>
               </Collapsible>
-              {index < faqs.length - 1 && <hr className="mt-2" />}
+
+              {index < faqs.length - 1 && <Divider />}
             </div>
           ))}
-        </LegacyStack>
-      </LegacyCard>
+        </BlockStack>
+      </Card>
     </BlockStack>
   );
 };
