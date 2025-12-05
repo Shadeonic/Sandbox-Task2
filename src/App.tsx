@@ -3,10 +3,9 @@ import { AppProvider } from "@shopify/polaris";
 import "@shopify/polaris/build/esm/styles.css";
 import "./index.css";
 
-import { BrowserRouter, Routes, Route, Link, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Link, Navigate, useParams } from "react-router-dom";
 import { FaqWidgetExample } from "./features/faq/components/FaqWidget/FaqWidgetExample";
-// placeholder import for Upsell — create this file when you expand
-// import { UpsellWidgetExample } from "./features/upsell/components/UpsellWidgetExample";
+import { ComponentDetailsPage } from "./sandbox/pages/ComponentDetailsPage";
 
 export function App() {
   return (
@@ -17,30 +16,37 @@ export function App() {
           <nav className="w-64 border-r p-4">
             <ul className="space-y-2">
               <li>
-                <Link to="/faq" className="text-blue-600 hover:underline">
-                  FAQ
+                <Link to="/components/faq-widget" className="text-blue-600 hover:underline">
+                  FAQ Widget
                 </Link>
               </li>
-              <li>
-                <Link to="/upsell" className="text-blue-600 hover:underline">
-                  Upsell
-                </Link>
-              </li>
-              {/* add more links here */}
             </ul>
           </nav>
 
           {/* Main content area */}
           <section className="flex-1 p-6 overflow-y-auto">
             <Routes>
-              <Route path="/" element={<Navigate to="/faq" replace />} />
+              {/* Default redirect goes to the FAQ docs/demo page */}
+              <Route path="/" element={<Navigate to="/components/faq-widget" replace />} />
+
+              {/* Optional: keep the plain FAQ example route if you want */}
               <Route path="/faq" element={<FaqWidgetExample />} />
-              {/* Uncomment when UpsellWidgetExample exists */}
-              {/* <Route path="/upsell" element={<UpsellWidgetExample />} /> */}
+
+              {/* Component details route for docs integration */}
+              <Route path="/components/:componentId" element={<ComponentRouteWrapper />} />
             </Routes>
           </section>
         </main>
       </BrowserRouter>
     </AppProvider>
   );
+}
+
+/**
+ * Wrapper to extract :componentId param and render ComponentDetailsPage
+ */
+function ComponentRouteWrapper() {
+  const { componentId } = useParams();
+  if (!componentId) return <div>No component selected.</div>;
+  return <ComponentDetailsPage componentId={componentId} />;
 }
