@@ -10,6 +10,7 @@ import {
 } from "@shopify/polaris";
 import { ChevronDown } from "lucide-react";
 import { t } from "i18next";
+import { sendEvent } from "../../../../utils/sendEvent";
 
 export interface FaqItem {
   question: string;
@@ -19,6 +20,20 @@ export interface FaqItem {
 interface FaqWidgetProps {
   faqs: FaqItem[];
 }
+
+/**
+ * FAQWidget component
+ *
+ * Renders a collapsible list of FAQ items.
+ *
+ * Props:
+ * - `faqs`: An array of FAQ items, each with a `question` and `answer`.
+ *
+ * Behavior:
+ * - Tracks which FAQ item is currently open.
+ * - Sends a mock `faq_question_click` event when a question is toggled open.
+ * - Uses Polaris layout components and supports i18n via `t("FAQ.…")`.
+ */
 
 export const FaqWidget: React.FC<FaqWidgetProps> = ({ faqs }) => {
   const [openIdx, setOpenIdx] = useState<number | null>(null);
@@ -41,7 +56,7 @@ export const FaqWidget: React.FC<FaqWidgetProps> = ({ faqs }) => {
                 className="w-full hover:underline cursor-pointer"
                 onClick={() => {
                   handleToggle(index);
-                //   sendEvent("faq_question_click", { question: faq.question });
+                    sendEvent("faq_question_click", { question: faq.question });
                 }}
               >
                 <div className="w-full">
