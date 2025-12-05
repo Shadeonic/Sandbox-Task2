@@ -1,9 +1,13 @@
 import { describe, it, expect } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
+import { AppProvider } from "@shopify/polaris";
 import { FaqWidget } from "./FaqWidget";
 import type { FaqItem } from "./FaqWidget";
 
-// Sample FAQ data for testing
+function renderWithPolaris(ui: React.ReactElement) {
+  return render(<AppProvider i18n={{}}>{ui}</AppProvider>);
+}
+
 const faqs: FaqItem[] = [
   { question: "How do I enable the App Embed?", answer: <p>Enable it in Shopify admin.</p> },
   { question: "Can I use the app with PageFly?", answer: <p>Yes, it works with PageFly.</p> },
@@ -11,54 +15,54 @@ const faqs: FaqItem[] = [
 
 describe("FaqWidget", () => {
   it("renders all FAQ questions", () => {
-    render(<FaqWidget faqs={faqs} />);
+    renderWithPolaris(<FaqWidget faqs={faqs} />);
     expect(screen.getByText("How do I enable the App Embed?")).toBeInTheDocument();
     expect(screen.getByText("Can I use the app with PageFly?")).toBeInTheDocument();
   });
 
   it("toggles answer visibility when a question is clicked", () => {
-    render(<FaqWidget faqs={faqs} />);
+    renderWithPolaris(<FaqWidget faqs={faqs} />);
     const firstQuestion = screen.getByText("How do I enable the App Embed?");
-    
-    // Initially answer should not be visible
-    expect(screen.queryByText("Enable it in Shopify admin.")).not.toBeInTheDocument();
+    const answerContainer = document.getElementById("faq-0");
 
-    // Click to expand
-    fireEvent.click(firstQuestion);
-    expect(screen.getByText("Enable it in Shopify admin.")).toBeInTheDocument();
+    // Initially collapsed
+    expect(answerContainer).toHaveAttribute("aria-hidden", "true");
 
-    // Click again to collapse
     fireEvent.click(firstQuestion);
-    expect(screen.queryByText("Enable it in Shopify admin.")).not.toBeInTheDocument();
+    expect(answerContainer).toHaveAttribute("aria-hidden", "false");
+
+    fireEvent.click(firstQuestion);
+    expect(answerContainer).toHaveAttribute("aria-hidden", "true");
   });
 
   it("only allows one FAQ open at a time", () => {
-    render(<FaqWidget faqs={faqs} />);
+    renderWithPolaris(<FaqWidget faqs={faqs} />);
     const firstQuestion = screen.getByText("How do I enable the App Embed?");
     const secondQuestion = screen.getByText("Can I use the app with PageFly?");
+    const firstAnswerContainer = document.getElementById("faq-0");
+    const secondAnswerContainer = document.getElementById("faq-1");
 
-    // Open first
     fireEvent.click(firstQuestion);
-    expect(screen.getByText("Enable it in Shopify admin.")).toBeInTheDocument();
+    expect(firstAnswerContainer).toHaveAttribute("aria-hidden", "false");
 
-    // Open second
     fireEvent.click(secondQuestion);
-    expect(screen.getByText("Yes, it works with PageFly.")).toBeInTheDocument();
-
-    // First should now be closed
-    expect(screen.queryByText("Enable it in Shopify admin.")).not.toBeInTheDocument();
+    expect(secondAnswerContainer).toHaveAttribute("aria-hidden", "false");
+    expect(firstAnswerContainer).toHaveAttribute("aria-hidden", "true");
   });
 
   it("rotates chevron when open", () => {
-    render(<FaqWidget faqs={faqs} />);
+    renderWithPolaris(<FaqWidget faqs={faqs} />);
     const firstQuestion = screen.getByText("How do I enable the App Embed?");
-    const chevron = screen.getByRole("img", { hidden: true }); // lucide-react icons render as <svg role="img">
+    // Polaris applies transform classes to the span wrapping the svg
+    const chevronWrapper = firstQuestion.parentElement?.querySelector("span");
 
-    // Initially not rotated
-    expect(chevron.className).not.toContain("rotate-180");
+    expect(chevronWrapper).toBeTruthy();
+    const initialClass = chevronWrapper?.getAttribute("class") || "";
 
-    // Click to expand
     fireEvent.click(firstQuestion);
-    expect(chevron.className).toContain("rotate-180");
+    const updatedClass = chevronWrapper?.getAttribute("class") || "";
+
+    // Assert that the wrapper class changes after expansion
+    expect(updatedClass).not.toEqual(initialClass);
   });
 });
