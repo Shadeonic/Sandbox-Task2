@@ -20,16 +20,16 @@ Description: An array of FAQ items. Each item contains a question string and an 
 
 ---
 
-##Behavior
--Renders all FAQ questions in a vertical list.
--Clicking a question toggles its answer open/closed.
--Only one FAQ can be open at a time.
--Chevron icon rotates when the item is expanded.
--Optional analytics/event tracking can be added by extending the click handler.
+## Behavior
+- Renders all FAQ questions in a vertical list.
+- Clicking a question toggles its answer open/closed.
+- Only one FAQ can be open at a time.
+- Chevron icon rotates when the item is expanded.
+- Optional analytics/event tracking can be added by extending the click handler.
 
 ---
 
-##Example Usage
+## Example Usage
 ```tsx
 import { FaqWidget } from "./FaqWidget";
 
@@ -64,12 +64,17 @@ const faqs = [
 ];
 
 export function App() {
-  return <FaqWidget faqs={faqs} />;
+  return (
+  <AppProvider i18n={{}}>
+    <FaqWidget faqs={faqs} />
+  </AppProvider>
+  );  
 }
 ``` 
-##Testing Notes
--Use Vitest + React Testing Library.
--Verify that all questions render.
--Clicking toggles answer visibility.
--Only one FAQ open at a time.
--Chevron rotates when expanded.
+## Testing Notes
+- Use Vitest + React Testing Library.
+- Verify that all questions render.
+- Clicking toggles answer visibility.
+- Only one FAQ open at a time.
+- Chevron rotates when expanded.
+- Mock `window.matchMedia` in setupTests.ts for Polaris compatibility.
