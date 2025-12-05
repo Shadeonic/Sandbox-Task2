@@ -75,6 +75,7 @@ export const FaqWidget: React.FC<FaqWidgetProps> = ({ faqs }) => {
                     {faq.question}
                   </Text>
                   <span
+                    data-testid={`faq-chevron-${index}`}
                     style={{
                       display: "inline-block",
                       transition: "transform 0.3s",
