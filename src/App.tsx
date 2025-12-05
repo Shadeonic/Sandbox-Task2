@@ -14,7 +14,7 @@ const faqs = [
         <p>
           To make your Upsell offers appear on your storefront, you need to enable the App Embed in your Shopify theme. This takes just a minute.
         </p>
-        <ul className="list-disc ml-6 mt-2">
+        <ul className="list-disc ml-6 mt-2 space-y-1">
           <li>Go to Shopify admin → Online Store → Customize</li>
           <li>Open the App embeds tab</li>
           <li>Find Libautech Smart Upsell and toggle it on</li>
@@ -24,7 +24,7 @@ const faqs = [
         <p className="mt-2">
           <a
             href="#"
-            className="underline text-blue-600"
+            className="underline text-blue-600 hover:text-blue-500"
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -36,7 +36,11 @@ const faqs = [
   },
   {
     question: "My offer isn’t showing up — what should I do?",
-    answer: <p>Make sure the App Embed is enabled and your offer conditions are met. Check targeting rules and product availability.</p>,
+    answer: (
+      <p>
+        Make sure the App Embed is enabled and your offer conditions are met. Check targeting rules and product availability.
+      </p>
+    ),
   },
   {
     question: "How do I reposition the widget?",
@@ -59,22 +63,22 @@ const faqs = [
 export function App() {
   return (
     <AppProvider i18n={{}}>
-      <div className="w-full max-w-[720px] mx-auto px-4 py-8">
+      <main className="w-full max-w-2xl mx-auto px-6 py-10">
         {/* Heading block */}
-        <div className="mb-6">
-          <h1 className="text-[28px] font-semibold leading-tight text-gray-900">
+        <header className="mb-8 text-center">
+          <h1 className="text-3xl font-semibold leading-tight text-gray-900">
             Frequently Asked Questions
           </h1>
-          <p className="text-[16px] text-gray-500 mt-1">
+          <p className="text-base text-gray-500 mt-2">
             Quick answers to common questions
           </p>
-        </div>
+        </header>
 
         {/* FAQ widget */}
-        <div className="space-y-4">
+        <section className="space-y-4">
           <FaqWidget faqs={faqs} />
-        </div>
-      </div>
+        </section>
+      </main>
     </AppProvider>
   );
 }
