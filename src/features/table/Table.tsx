@@ -106,19 +106,17 @@ const startIndex = (currentPage - 1) * itemsPerPage;
 const endIndex = startIndex + itemsPerPage;
 
 
- useEffect(() => {
-  if (paginationMode === "client") {
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
-    setDisplayRows(rows.slice(startIndex, endIndex));
-  }
-}, [currentPage, rows, paginationMode, itemsPerPage]);
+  useEffect(() => {
+    if (paginationMode === "client") {
+      setDisplayRows(rows.slice(startIndex, endIndex));
+    }
+  }, [currentPage, rows, paginationMode]);
 
   const handlePageChange = (newPage: number) => {
     setCurrentPage(newPage);
     if (paginationMode === "server") {
       setLoading(true);
-      if (searching) {
+      if (searching.isSearching) {
         changePage(newPage, searching.query).then(() => {
           setLoading(false);
         });
@@ -130,7 +128,12 @@ const endIndex = startIndex + itemsPerPage;
     }
   };
 
-  const shopify = useAppBridge();
+  const shopify = {
+  loading: (state: boolean) => {
+    console.log("Mock loading:", state);
+  },
+};
+
 
   const skeletonRows = Array(3).fill(Array(headings.length).fill(<SkeletonTabs count={1} />));
 
@@ -194,7 +197,7 @@ const endIndex = startIndex + itemsPerPage;
             ? rows.length === 0
               ? skeletonRows
               : displayRows
-            : rowCount === 0 || loading
+            : displayRows
             ? skeletonRows
             : rows
         }
@@ -223,7 +226,7 @@ const endIndex = startIndex + itemsPerPage;
         paginationMode === "client"
           ? rows.length === 0
             ? skeletonRows
-            : displayRows
+            : rows.slice(startIndex, endIndex)
           : rowCount === 0 || loading
           ? skeletonRows
           : rows

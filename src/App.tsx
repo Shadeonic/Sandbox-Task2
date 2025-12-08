@@ -4,9 +4,9 @@ import "@shopify/polaris/build/esm/styles.css";
 import "./index.css";
 
 import { BrowserRouter, Routes, Route, Link, Navigate, useParams } from "react-router-dom";
-import { FaqWidgetExample } from "./features/faq/components/FaqWidget/FaqWidgetExample";
-import { ComponentDetailsPage } from "./sandbox/pages/ComponentDetailsPage";
-import { TableExample } from "./features/table/TableExample";
+import { FaqWidgetExample } from "@/features/faq/components/FaqWidget/FaqWidgetExample";
+import { ComponentDetailsPage } from "@/sandbox/pages/ComponentDetailsPage";
+import Page from "@/pages/Page";
 
 export function App() {
   return (
@@ -22,8 +22,8 @@ export function App() {
                 </Link>
               </li>
               <li>
-                <Link to="/table" className="text-blue-600 hover:underline">
-                  Table
+                <Link to="/offers" className="text-blue-600 hover:underline">
+                  Offers Table
                 </Link>
               </li>
             </ul>
@@ -35,10 +35,11 @@ export function App() {
               {/* Default redirect goes to the FAQ docs/demo page */}
               <Route path="/" element={<Navigate to="/components/faq-widget" replace />} />
 
-              {/* Optional: keep the plain FAQ example route if you want */}
+              {/* FAQ demo route */}
               <Route path="/faq" element={<FaqWidgetExample />} />
 
-              <Route path="/table" element={<TableExample />} />
+              {/* Offers table route */}
+              <Route path="/offers" element={<Page />} />
 
               {/* Component details route for docs integration */}
               <Route path="/components/:componentId" element={<ComponentRouteWrapper />} />

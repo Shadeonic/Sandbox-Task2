@@ -24,7 +24,7 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
 
-    /* Алиасы */
+    /* Path alias support */
     "baseUrl": "./src",
     "paths": {
       "@/*": ["*"]
