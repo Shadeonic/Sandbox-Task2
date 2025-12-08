@@ -99,3 +99,5 @@ export const FaqWidget: React.FC<FaqWidgetProps> = ({ faqs }) => {
     </BlockStack>
   );
 };
+
+export default FaqWidget;

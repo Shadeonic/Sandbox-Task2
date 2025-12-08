@@ -24,3 +24,5 @@ export function useFaq() {
 
   return { openIndex, toggle };
 }
+
+export default useFaq;
