@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Table } from "@/features/table/Table";
 import { Button } from "@shopify/polaris";
+import { ButtonGroup } from "@shopify/polaris";
+
+import type { BadgeProps } from "@shopify/polaris";
+import ToggleStatus from "@/features/table/ToggleStatus";
 
 interface Offer {
   _id: string;
@@ -10,7 +14,7 @@ interface Offer {
   views: number;
   clicks: number;
   orders: number;
-  status: string;
+  status: "Active" | "Inactive";
 }
 
 const Page: React.FC = () => {
@@ -139,9 +143,18 @@ const Page: React.FC = () => {
     offer.views,
     offer.clicks,
     offer.orders,
-    offer.status,
-    <Button variant="plain">Edit</Button>,
+    <ToggleStatus
+      initialStatus={offer.status}
+      onToggle={(newStatus) => console.log("Toggled:", offer._id, newStatus)}
+    />,
+    <ButtonGroup>
+      <Button onClick={() => console.log("Edit", offer._id)}>Edit</Button>
+      <Button onClick={() => console.log("Move", offer._id)}>Move</Button>
+      <Button onClick={() => console.log("Duplicate", offer._id)}>Duplicate</Button>
+      <Button tone="critical" onClick={() => console.log("Delete", offer._id)}>Delete</Button>
+    </ButtonGroup>,
   ]);
+
 
   return (
     <Table

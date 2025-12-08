@@ -181,7 +181,7 @@ const endIndex = startIndex + itemsPerPage;
           <TextField
             label="Search"
             type="text"
-            placeholder={t("Table.search") || "Search"}
+            placeholder={t("Search Offers") || "Search"}
             value={search}
             onChange={(value) => setSearch(value)}
             autoComplete="off"
