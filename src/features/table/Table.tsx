@@ -106,11 +106,13 @@ const startIndex = (currentPage - 1) * itemsPerPage;
 const endIndex = startIndex + itemsPerPage;
 
 
-  useEffect(() => {
-    if (paginationMode === "client") {
-      setDisplayRows(rows.slice(startIndex, endIndex));
-    }
-  }, [currentPage, rows, paginationMode]);
+ useEffect(() => {
+  if (paginationMode === "client") {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    setDisplayRows(rows.slice(startIndex, endIndex));
+  }
+}, [currentPage, rows, paginationMode, itemsPerPage]);
 
   const handlePageChange = (newPage: number) => {
     setCurrentPage(newPage);
@@ -221,7 +223,7 @@ const endIndex = startIndex + itemsPerPage;
         paginationMode === "client"
           ? rows.length === 0
             ? skeletonRows
-            : rows.slice(startIndex, endIndex)
+            : displayRows
           : rowCount === 0 || loading
           ? skeletonRows
           : rows

@@ -6,6 +6,7 @@ import "./index.css";
 import { BrowserRouter, Routes, Route, Link, Navigate, useParams } from "react-router-dom";
 import { FaqWidgetExample } from "./features/faq/components/FaqWidget/FaqWidgetExample";
 import { ComponentDetailsPage } from "./sandbox/pages/ComponentDetailsPage";
+import { TableExample } from "./features/table/TableExample";
 
 export function App() {
   return (
@@ -20,6 +21,11 @@ export function App() {
                   FAQ Widget
                 </Link>
               </li>
+              <li>
+                <Link to="/table" className="text-blue-600 hover:underline">
+                  Table
+                </Link>
+              </li>
             </ul>
           </nav>
 
@@ -31,6 +37,8 @@ export function App() {
 
               {/* Optional: keep the plain FAQ example route if you want */}
               <Route path="/faq" element={<FaqWidgetExample />} />
+
+              <Route path="/table" element={<TableExample />} />
 
               {/* Component details route for docs integration */}
               <Route path="/components/:componentId" element={<ComponentRouteWrapper />} />
