@@ -6,6 +6,7 @@ import "./index.css";
 import { BrowserRouter, Routes, Route, Link, Navigate, useParams } from "react-router-dom";
 import { FaqWidgetExample } from "./features/faq/components/FaqWidget/FaqWidgetExample";
 import { ComponentDetailsPage } from "./sandbox/pages/ComponentDetailsPage";
+import Page from "./pages/Page";
 
 export function App() {
   return (
@@ -18,6 +19,11 @@ export function App() {
               <li>
                 <Link to="/components/faq-widget" className="text-blue-600 hover:underline">
                   FAQ Widget
+                </Link>
+              </li>
+              <li>
+                <Link to="/offers" className="text-blue-600 hover:underline">
+                  Offers Table
                 </Link>
               </li>
             </ul>
@@ -34,6 +40,9 @@ export function App() {
 
               {/* Component details route for docs integration */}
               <Route path="/components/:componentId" element={<ComponentRouteWrapper />} />
+
+              <Route path="/offers" element={<Page />} />
+
             </Routes>
           </section>
         </main>

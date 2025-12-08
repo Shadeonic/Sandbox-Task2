@@ -116,7 +116,7 @@ const endIndex = startIndex + itemsPerPage;
     setCurrentPage(newPage);
     if (paginationMode === "server") {
       setLoading(true);
-      if (searching) {
+      if (searching.isSearching) {
         changePage(newPage, searching.query).then(() => {
           setLoading(false);
         });
@@ -192,7 +192,7 @@ const endIndex = startIndex + itemsPerPage;
             ? rows.length === 0
               ? skeletonRows
               : displayRows
-            : rowCount === 0 || loading
+            : displayRows
             ? skeletonRows
             : rows
         }
