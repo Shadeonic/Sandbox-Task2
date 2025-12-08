@@ -14,6 +14,17 @@ import React, { useEffect, useState } from "react";
 import { SearchIcon } from "@shopify/polaris-icons";
 import { t } from "i18next";
 
+function useDebounce<T>(value: T, delay: number): T {
+  const [debouncedValue, setDebouncedValue] = useState(value);
+
+  useEffect(() => {
+    const handler = setTimeout(() => setDebouncedValue(value), delay);
+    return () => clearTimeout(handler);
+  }, [value, delay]);
+
+  return debouncedValue;
+}
+
 interface TableProps {
   contentTypes: ("text" | "numeric")[];
   headings: (string | React.ReactNode)[];
@@ -25,7 +36,6 @@ interface TableProps {
   noResults?: boolean;
   itemsPerPage?: number;
 }
-
 
 /**
  *  Data table with pagination.
@@ -97,6 +107,7 @@ const [currentPage, setCurrentPage] = useState<number>(1);
 const [displayRows, setDisplayRows] = useState<React.ReactNode[][]>([]);
 const [loading, setLoading] = useState<boolean>(false);
 const [search, setSearch] = useState<string>("");
+const debouncedSearch = useDebounce(search, 500); // 500ms delay
 const [searching, setSearching] = useState<{ query: string; isSearching: boolean }>({
   query: "",
   isSearching: false,
@@ -111,6 +122,20 @@ const endIndex = startIndex + itemsPerPage;
       setDisplayRows(rows.slice(startIndex, endIndex));
     }
   }, [currentPage, rows, paginationMode]);
+
+  useEffect(() => {
+  if (searchOffer && debouncedSearch !== "") {
+    shopify.loading(true);
+    setLoading(true);
+    setCurrentPage(1);
+    searchOffer(debouncedSearch).then(() => {
+      shopify.loading(false);
+      setLoading(false);
+      setSearching({ query: debouncedSearch, isSearching: true });
+    });
+  }
+}, [debouncedSearch]);
+
 
   const handlePageChange = (newPage: number) => {
     setCurrentPage(newPage);
@@ -186,49 +211,52 @@ const endIndex = startIndex + itemsPerPage;
           </InlineStack>
         </Box>
       </InlineStack>
-      {noResults && (
+      {noResults ? (
         <InlineError message={t("Table.noOffers") || "No offers found"} fieldID="myFieldID" />
-      )}
-      <DataTable
-        columnContentTypes={contentTypes}
-        headings={headings}
-        rows={
-          paginationMode === "client"
-            ? rows.length === 0
-              ? skeletonRows
-              : displayRows
-            : displayRows
-            ? skeletonRows
-            : rows
-        }
-        footerContent={
-          <InlineStack align="center" wrap={false} gap="400">
-            <Pagination
-              hasPrevious={currentPage > 1}
-              onPrevious={() => handlePageChange(currentPage - 1)}
-              hasNext={
-                paginationMode === "client"
-                  ? currentPage * itemsPerPage < rows.length
-                  : currentPage * itemsPerPage < rowCount
+        ) : (
+          <div className="offersTableWrapper">
+            <DataTable
+              columnContentTypes={contentTypes}
+              headings={headings}
+              rows={
+                loading
+                  ? skeletonRows
+                  : paginationMode === "client"
+                  ? displayRows
+                  : rows
               }
-              onNext={() => handlePageChange(currentPage + 1)}
-              label={paginationMode === "client" ? clientLabel : serverClient}
+              footerContent={
+                <InlineStack align="center" wrap={false} gap="400">
+                  <Pagination
+                    hasPrevious={currentPage > 1}
+                    onPrevious={() => handlePageChange(currentPage - 1)}
+                    hasNext={
+                      paginationMode === "client"
+                        ? currentPage * itemsPerPage < rows.length
+                        : currentPage * itemsPerPage < rowCount
+                    }
+                    onNext={() => handlePageChange(currentPage + 1)}
+                    label={paginationMode === "client" ? clientLabel : serverClient}
+                  />
+                </InlineStack>
+              }
             />
-          </InlineStack>
-        }
-      />
+          </div>
+        )}
     </Card>
   ) : (
+  noResults ? (
+  <InlineError message={t("Table.noOffers") || "No offers found"} fieldID="offersTable" />
+) : (
+  <div className="offersTableWrapper">
     <DataTable
       columnContentTypes={contentTypes}
       headings={headings}
       rows={
-        paginationMode === "client"
-          ? rows.length === 0
-            ? skeletonRows
-            : rows.slice(startIndex, endIndex)
-          : rowCount === 0 || loading
+        loading
           ? skeletonRows
+          : paginationMode === "client"
+          ? displayRows
           : rows
       }
       footerContent={
@@ -247,5 +275,8 @@ const endIndex = startIndex + itemsPerPage;
         </InlineStack>
       }
     />
+  </div>
+)
+
   );
 };

@@ -40,3 +40,8 @@
 .read-the-docs {
   color: #888;
 }
+
+.offersTableWrapper .Polaris-DataTable__Cell {
+  vertical-align: middle;
+}
+
