@@ -26,6 +26,4 @@
     }
   },
   "include": ["src", "src/custom-elements.d.ts"]
-
-
 }

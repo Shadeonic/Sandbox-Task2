@@ -41,10 +41,7 @@
   color: #888;
 }
 
-.offersTableWrapper .Polaris-DataTable__Cell {
-  vertical-align: middle;
-}
-
-.offersTableWrapper td {
-  vertical-align: middle;
+/* Center only table headers */
+.offersTableWrapper th.Polaris-DataTable__Cell {
+  text-align: center;
 }

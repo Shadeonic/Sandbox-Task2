@@ -155,7 +155,6 @@ const Page: React.FC = () => {
     </ButtonGroup>,
   ]);
 
-
   return (
     <Table
       contentTypes={contentTypes}
