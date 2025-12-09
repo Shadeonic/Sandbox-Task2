@@ -13,6 +13,17 @@ import React, { useEffect, useState } from "react";
 import { SearchIcon } from "@shopify/polaris-icons";
 import { t } from "i18next";
 
+function useDebounce<T>(value: T, delay: number): T {
+  const [debouncedValue, setDebouncedValue] = useState(value);
+
+  useEffect(() => {
+    const handler = setTimeout(() => setDebouncedValue(value), delay);
+    return () => clearTimeout(handler);
+  }, [value, delay]);
+
+  return debouncedValue;
+}
+
 interface TableProps {
   contentTypes: ("text" | "numeric")[];
   headings: (string | React.ReactNode)[];
@@ -29,7 +40,6 @@ interface TableProps {
   label?: string;
   loading?: boolean;
 }
-
 
 /**
  *  Data table with pagination.
@@ -101,9 +111,21 @@ export const Table: React.FC<TableProps> = ({
   label,
   loading,
 }) => {
+<<<<<<< HEAD
   const [currentPage, setCurrentPage] = useState<number>(page ?? 1);
   const [displayRows, setDisplayRows] = useState<React.ReactNode[][]>([]);
   const [search, setSearch] = useState<string>("");
+=======
+const [currentPage, setCurrentPage] = useState<number>(1);
+const [displayRows, setDisplayRows] = useState<React.ReactNode[][]>([]);
+const [loading, setLoading] = useState<boolean>(false);
+const [search, setSearch] = useState<string>("");
+const debouncedSearch = useDebounce(search, 500); // 500ms delay
+const [searching, setSearching] = useState<{ query: string; isSearching: boolean }>({
+  query: "",
+  isSearching: false,
+});
+>>>>>>> bbb4951b3f55c5776ada82935c149171dae8c7d6
 
   // синхронизация page из пропсов
   useEffect(() => {
@@ -123,6 +145,20 @@ export const Table: React.FC<TableProps> = ({
     }
   }, [currentPage, rows, paginationMode]);
 
+  useEffect(() => {
+  if (searchOffer && debouncedSearch !== "") {
+    shopify.loading(true);
+    setLoading(true);
+    setCurrentPage(1);
+    searchOffer(debouncedSearch).then(() => {
+      shopify.loading(false);
+      setLoading(false);
+      setSearching({ query: debouncedSearch, isSearching: true });
+    });
+  }
+}, [debouncedSearch]);
+
+
   const handlePageChange = (newPage: number) => {
     setCurrentPage(newPage);
     if (paginationMode === "server") {
@@ -139,6 +175,7 @@ export const Table: React.FC<TableProps> = ({
 
   return (
     <Card>
+<<<<<<< HEAD
       {searchOffer && (
         <InlineStack align="start" blockAlign="center" gap="200" wrap={false}>
           <Box width="100%">
@@ -193,10 +230,112 @@ export const Table: React.FC<TableProps> = ({
               }
               onNext={() => handlePageChange(currentPage + 1)}
               label={label ?? (paginationMode === "client" ? clientLabel : serverLabel)}
-            />
+=======
+      <InlineStack align="start" blockAlign="center" gap="200" wrap={false}>
+        <Box width="100%">
+          <TextField
+            label="Search"
+            type="text"
+            placeholder={t("Search Offers") || "Search"}
+            value={search}
+            onChange={(value) => setSearch(value)}
+            autoComplete="off"
+          />
+        </Box>
+        <Box>
+          <InlineStack>
+            <Button
+              onClick={() => {
+                shopify.loading(true);
+                setLoading(true);
+                setCurrentPage(1);
+                if (search === "") {
+                  setSearching({ query: "", isSearching: false });
+                }
+
+                searchOffer(search).then(() => {
+                  shopify.loading(false);
+                  setLoading(false);
+                  setSearching({ query: search, isSearching: true });
+                });
+              }}
+              size="large"
+              variant="primary"
+              icon={SearchIcon}
+            ></Button>
           </InlineStack>
-        }
-      />
+        </Box>
+      </InlineStack>
+      {noResults ? (
+        <InlineError message={t("Table.noOffers") || "No offers found"} fieldID="myFieldID" />
+        ) : (
+          <div className="offersTableWrapper">
+            <DataTable
+              columnContentTypes={contentTypes}
+              headings={headings}
+              rows={
+                loading
+                  ? skeletonRows
+                  : paginationMode === "client"
+                  ? displayRows
+                  : rows
+              }
+              footerContent={
+                <InlineStack align="center" wrap={false} gap="400">
+                  <Pagination
+                    hasPrevious={currentPage > 1}
+                    onPrevious={() => handlePageChange(currentPage - 1)}
+                    hasNext={
+                      paginationMode === "client"
+                        ? currentPage * itemsPerPage < rows.length
+                        : currentPage * itemsPerPage < rowCount
+                    }
+                    onNext={() => handlePageChange(currentPage + 1)}
+                    label={paginationMode === "client" ? clientLabel : serverClient}
+                  />
+                </InlineStack>
+              }
+>>>>>>> bbb4951b3f55c5776ada82935c149171dae8c7d6
+            />
+          </div>
+        )}
     </Card>
+<<<<<<< HEAD
+=======
+  ) : (
+  noResults ? (
+  <InlineError message={t("Table.noOffers") || "No offers found"} fieldID="offersTable" />
+) : (
+  <div className="offersTableWrapper">
+    <DataTable
+      columnContentTypes={contentTypes}
+      headings={headings}
+      rows={
+        loading
+          ? skeletonRows
+          : paginationMode === "client"
+          ? displayRows
+          : rows
+      }
+      footerContent={
+        <InlineStack align="center" wrap={false} gap="400">
+          <Pagination
+            hasPrevious={currentPage > 1}
+            onPrevious={() => handlePageChange(currentPage - 1)}
+            hasNext={
+              paginationMode === "client"
+                ? currentPage * itemsPerPage < rows.length
+                : currentPage * itemsPerPage < rowCount
+            }
+            onNext={() => handlePageChange(currentPage + 1)}
+            label={paginationMode === "client" ? clientLabel : serverClient}
+          />
+        </InlineStack>
+      }
+    />
+  </div>
+)
+
+>>>>>>> bbb4951b3f55c5776ada82935c149171dae8c7d6
   );
 };
