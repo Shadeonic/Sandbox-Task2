@@ -105,19 +105,14 @@ export const Table: React.FC<TableProps> = ({
 
   const skeletonRows = Array(3).fill(Array(headings.length).fill(<SkeletonTabs count={1} />));
 
-  let clientLabel = `${t("Table.showing") || "Showing"} ${startIndex + 1}-${
-    rows.length < endIndex ? rows.length : endIndex
-  } ${t("Table.of")} ${rows.length} ${
-    rows.length == 1 ? t("Table.result") || "result" : t("Table.results") || "results"
-  }`;
+  let clientLabel = `Showing ${startIndex + 1}-${
+    Math.min(endIndex, paginationMode === "client" ? rows.length : rowCount)} 
+    of ${paginationMode === "client" ? rows.length : rowCount} results`;
 
-  let serverClient = `${t("Table.showing") || "Showing"} ${startIndex + 1}-${
-    rowCount < endIndex ? rowCount : endIndex
-  } ${t("Table.of") || "of"} ${rowCount} ${
-    rowCount == 1 ? t("Table.result") || "result" : t("Table.results") || "results"
-  }`;
+  let serverClient = `Showing ${startIndex + 1}-${
+    Math.min(endIndex, paginationMode === "client" ? rows.length : rowCount)} 
+    of ${paginationMode === "client" ? rows.length : rowCount} results`;
 
-  // 👇 функция для обёртки ячеек
   const wrapRows = (inputRows: React.ReactNode[][]): React.ReactNode[][] => {
   return inputRows.map((row) =>
     row.map((cell, i) => (

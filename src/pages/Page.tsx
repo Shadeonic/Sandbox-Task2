@@ -34,67 +34,58 @@ const Page: React.FC = () => {
     console.log("Mock fetch for page", page, "query", query);
 
     const mockOffers: Offer[] = [
-      {
-        _id: "1",
-        title: "Winter Sale",
-        type: "Popup",
-        createdAt: "2025-11-01",
-        views: 67,
-        clicks: 12,
-        orders: 1,
-        status: "Inactive",
-      },
-      {
-        _id: "2",
-        title: "Spring Sale",
-        type: "Banner",
-        createdAt: "2025-10-15",
-        views: 89,
-        clicks: 34,
-        orders: 5,
-        status: "Active",
-      },
-      {
-        _id: "3",
-        title: "Summer Blast",
-        type: "Popup",
-        createdAt: "2025-08-10",
-        views: 120,
-        clicks: 50,
-        orders: 10,
-        status: "Active",
-      },
-      {
-        _id: "4",
-        title: "Autumn Deals",
-        type: "Banner",
-        createdAt: "2025-09-20",
-        views: 45,
-        clicks: 8,
-        orders: 2,
-        status: "Inactive",
-      },
-      {
-        _id: "5",
-        title: "Flash Friday",
-        type: "Popup",
-        createdAt: "2025-12-01",
-        views: 300,
-        clicks: 90,
-        orders: 25,
-        status: "Active",
-      },
-      {
-        _id: "6",
-        title: "Cyber Monday",
-        type: "Banner",
-        createdAt: "2025-12-02",
-        views: 250,
-        clicks: 70,
-        orders: 20,
-        status: "Active",
-      },
-    ];
+  {
+    _id: "1",
+    title: "Volume discount #3",
+    type: "Volume Discount",
+    createdAt: "2025-12-03",
+    views: 0,
+    clicks: 0,
+    orders: 0,
+    status: "Active",
+  },
+  {
+    _id: "2",
+    title: "Product addons #2",
+    type: "Product Add-ons",
+    createdAt: "2025-11-20",
+    views: 0,
+    clicks: 0,
+    orders: 0,
+    status: "Inactive",
+  },
+  {
+    _id: "3",
+    title: "Cart drawer addons #2",
+    type: "Cart Drawer Add-ons",
+    createdAt: "2025-10-28",
+    views: 0,
+    clicks: 0,
+    orders: 0,
+    status: "Active",
+  },
+  {
+    _id: "4",
+    title: "Product addons #1",
+    type: "Product Add-ons",
+    createdAt: "2025-09-11",
+    views: 0,
+    clicks: 0,
+    orders: 0,
+    status: "Inactive",
+  },
+  {
+    _id: "5",
+    title: "Volume discount #2",
+    type: "Volume Discount",
+    createdAt: "2025-09-09",
+    views: 0,
+    clicks: 0,
+    orders: 0,
+    status: "Inactive",
+  },
+];
+
 
     const filtered = query
       ? mockOffers.filter((offer) =>
@@ -114,16 +105,17 @@ const Page: React.FC = () => {
     changePage(1);
   }, []);
 
-  const headings = [
-    "Offer Name",
-    "Type",
-    "Created",
-    "Views",
-    "Clicks",
-    "Orders",
-    "Status",
-    "Actions",
-  ];
+const headings = [
+  <span className="centerCell">Offer Name</span>,
+  <span className="centerCell">Type</span>,
+  <span className="centerCell">Created</span>,
+  <span className="centerCell">Views</span>,
+  <span className="centerCell">Clicks</span>,
+  <span className="centerCell">Orders</span>,
+  <span className="centerCell">Status</span>,
+  <span className="centerCell">Actions</span>,
+];
+
 
   const contentTypes: ("text" | "numeric")[] = [
     "text",
@@ -143,16 +135,19 @@ const Page: React.FC = () => {
     offer.views,
     offer.clicks,
     offer.orders,
-    <ToggleStatus
-      initialStatus={offer.status}
-      onToggle={(newStatus) => console.log("Toggled:", offer._id, newStatus)}
-    />,
+    <div className="centerCell">
+      <ToggleStatus
+        initialStatus={offer.status}
+        onToggle={(newStatus) => console.log("Toggled:", offer._id, newStatus)}
+      />
+    </div>,
     <ButtonGroup>
-      <Button onClick={() => console.log("Edit", offer._id)}>Edit</Button>
       <Button onClick={() => console.log("Move", offer._id)}>Move</Button>
+      <Button onClick={() => console.log("Edit", offer._id)}>Edit</Button>
       <Button onClick={() => console.log("Duplicate", offer._id)}>Duplicate</Button>
       <Button tone="critical" onClick={() => console.log("Delete", offer._id)}>Delete</Button>
-    </ButtonGroup>,
+    </ButtonGroup>
+
   ]);
 
   return (
