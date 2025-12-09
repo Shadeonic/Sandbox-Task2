@@ -1,3 +1,4 @@
+import { useAppBridge } from "@shopify/app-bridge-react";
 import {
   Box,
   Button,
@@ -34,11 +35,6 @@ interface TableProps {
   searchOffer?: (query: string) => Promise<void>;
   noResults?: boolean;
   itemsPerPage?: number;
-  page?: number;
-  pageSize?: number;
-  total?: number;
-  label?: string;
-  loading?: boolean;
 }
 
 /**
@@ -106,16 +102,7 @@ export const Table: React.FC<TableProps> = ({
   searchOffer,
   noResults,
   itemsPerPage = 5,
-  page,
-  total,
-  label,
-  loading,
 }) => {
-<<<<<<< HEAD
-  const [currentPage, setCurrentPage] = useState<number>(page ?? 1);
-  const [displayRows, setDisplayRows] = useState<React.ReactNode[][]>([]);
-  const [search, setSearch] = useState<string>("");
-=======
 const [currentPage, setCurrentPage] = useState<number>(1);
 const [displayRows, setDisplayRows] = useState<React.ReactNode[][]>([]);
 const [loading, setLoading] = useState<boolean>(false);
@@ -125,23 +112,14 @@ const [searching, setSearching] = useState<{ query: string; isSearching: boolean
   query: "",
   isSearching: false,
 });
->>>>>>> bbb4951b3f55c5776ada82935c149171dae8c7d6
 
-  // синхронизация page из пропсов
-  useEffect(() => {
-    if (page !== undefined) {
-      setCurrentPage(page);
-    }
-  }, [page]);
+const startIndex = (currentPage - 1) * itemsPerPage;
+const endIndex = startIndex + itemsPerPage;
 
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
 
   useEffect(() => {
     if (paginationMode === "client") {
       setDisplayRows(rows.slice(startIndex, endIndex));
-    } else {
-      setDisplayRows(rows); // сервер уже присылает sliced
     }
   }, [currentPage, rows, paginationMode]);
 
@@ -162,75 +140,42 @@ const [searching, setSearching] = useState<{ query: string; isSearching: boolean
   const handlePageChange = (newPage: number) => {
     setCurrentPage(newPage);
     if (paginationMode === "server") {
-      changePage(newPage, search);
+      setLoading(true);
+      if (searching.isSearching) {
+        changePage(newPage, searching.query).then(() => {
+          setLoading(false);
+        });
+        return;
+      }
+      changePage(newPage).then(() => {
+        setLoading(false);
+      });
     }
   };
 
-  const skeletonRows = Array(itemsPerPage).fill(
-    Array(headings.length).fill(<SkeletonTabs count={1} />)
-  );
+  const shopify = {
+  loading: (state: boolean) => {
+    console.log("Mock loading:", state);
+  },
+};
 
-  const clientLabel = `Showing ${startIndex + 1}-${Math.min(endIndex, rows.length)} of ${rows.length} results`;
-  const serverLabel = `Showing ${startIndex + 1}-${Math.min(endIndex, rowCount)} of ${rowCount} results`;
 
-  return (
+  const skeletonRows = Array(3).fill(Array(headings.length).fill(<SkeletonTabs count={1} />));
+
+  let clientLabel = `${t("Table.showing") || "Showing"} ${startIndex + 1}-${
+    rows.length < endIndex ? rows.length : endIndex
+  } ${t("Table.of")} ${rows.length} ${
+    rows.length == 1 ? t("Table.result") || "result" : t("Table.results") || "results"
+  }`;
+
+  let serverClient = `${t("Table.showing") || "Showing"} ${startIndex + 1}-${
+    rowCount < endIndex ? rowCount : endIndex
+  } ${t("Table.of") || "of"} ${rowCount} ${
+    rowCount == 1 ? t("Table.result") || "result" : t("Table.results") || "results"
+  }`;
+
+  return searchOffer ? (
     <Card>
-<<<<<<< HEAD
-      {searchOffer && (
-        <InlineStack align="start" blockAlign="center" gap="200" wrap={false}>
-          <Box width="100%">
-            <TextField
-              label="Search"
-              type="text"
-              placeholder={t("Table.search") || "Search"}
-              value={search}
-              onChange={(value) => setSearch(value)}
-              autoComplete="off"
-            />
-          </Box>
-          <Box>
-            <InlineStack>
-              <Button
-                onClick={() => {
-                  setCurrentPage(1);
-                  searchOffer(search);
-                }}
-                size="large"
-                variant="primary"
-                icon={SearchIcon}
-              />
-            </InlineStack>
-          </Box>
-        </InlineStack>
-      )}
-
-      {noResults && !loading && (
-        <InlineError message={t("Table.noOffers") || "No offers found"} fieldID="offersTable" />
-      )}
-
-      <DataTable
-        columnContentTypes={contentTypes}
-        headings={headings}
-        rows={
-          loading
-            ? skeletonRows
-            : noResults
-            ? []
-            : displayRows
-        }
-        footerContent={
-          <InlineStack align="center" wrap={false} gap="400">
-            <Pagination
-              hasPrevious={currentPage > 1}
-              onPrevious={() => handlePageChange(currentPage - 1)}
-              hasNext={
-                paginationMode === "client"
-                  ? currentPage * itemsPerPage < rows.length
-                  : currentPage * itemsPerPage < rowCount
-              }
-              onNext={() => handlePageChange(currentPage + 1)}
-              label={label ?? (paginationMode === "client" ? clientLabel : serverLabel)}
-=======
       <InlineStack align="start" blockAlign="center" gap="200" wrap={false}>
         <Box width="100%">
           <TextField
@@ -295,13 +240,10 @@ const [searching, setSearching] = useState<{ query: string; isSearching: boolean
                   />
                 </InlineStack>
               }
->>>>>>> bbb4951b3f55c5776ada82935c149171dae8c7d6
             />
           </div>
         )}
     </Card>
-<<<<<<< HEAD
-=======
   ) : (
   noResults ? (
   <InlineError message={t("Table.noOffers") || "No offers found"} fieldID="offersTable" />
@@ -336,6 +278,5 @@ const [searching, setSearching] = useState<{ query: string; isSearching: boolean
   </div>
 )
 
->>>>>>> bbb4951b3f55c5776ada82935c149171dae8c7d6
   );
 };

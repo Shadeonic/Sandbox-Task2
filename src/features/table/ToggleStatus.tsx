@@ -1,31 +1,32 @@
-import { Checkbox, Text } from "@shopify/polaris";
-import { useState } from "react";
+import React, { useState } from "react";
 
 interface ToggleStatusProps {
   initialStatus: "Active" | "Inactive";
-  onToggle?: (newStatus: "Active" | "Inactive") => void;
+  onToggle: (newStatus: "Active" | "Inactive") => void;
 }
 
 const ToggleStatus: React.FC<ToggleStatusProps> = ({ initialStatus, onToggle }) => {
-  const [checked, setChecked] = useState(initialStatus === "Active");
+  const [status, setStatus] = useState<"Active" | "Inactive">(initialStatus);
 
-  const handleChange = (newChecked: boolean) => {
-    setChecked(newChecked);
-    const newStatus = newChecked ? "Active" : "Inactive";
-    onToggle?.(newStatus);
+  // Polaris Web Components генерируют CustomEvent с detail: { checked: boolean }
+  const handleChange = (event: CustomEvent<{ checked: boolean }>) => {
+    const checked = event.detail.checked;
+    const newStatus = checked ? "Active" : "Inactive";
+    setStatus(newStatus);
+    onToggle(newStatus);
   };
 
   return (
-    <Checkbox
-      label={
-        <Text as="span" visuallyHidden>
-            Toggle offer status
-        </Text>
-
-      }
-      checked={checked}
-      onChange={handleChange}
-    />
+    <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+      <s-switch
+        id="offer-switch"
+        label="Enable feature"
+        checked={status === "Active"}
+        // TS не знает про CustomEvent → используем приведение
+        onChange={(e) => handleChange(e as CustomEvent<{ checked: boolean }>)}
+      />
+      <span>{status === "Active" ? "On" : "Off"}</span>
+    </div>
   );
 };
 
