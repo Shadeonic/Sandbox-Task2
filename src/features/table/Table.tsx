@@ -117,17 +117,18 @@ export const Table: React.FC<TableProps> = ({
     rowCount == 1 ? t("Table.result") || "result" : t("Table.results") || "results"
   }`;
 
-const wrapRows = (inputRows: React.ReactNode[][]): React.ReactNode[][] => {
+  // 👇 функция для обёртки ячеек
+  const wrapRows = (inputRows: React.ReactNode[][]): React.ReactNode[][] => {
   return inputRows.map((row) =>
-    row.map((cell, i) => {
-      // Only wrap non-numeric columns
-      if (contentTypes[i] === "text") {
-        return <div key={i} className="centerCell">{cell}</div>;
-      }
-      return cell; // numeric cells stay as-is
-    })
+    row.map((cell, i) => (
+      <div key={i} className="centerCell">
+        {cell}
+      </div>
+    ))
   );
 };
+
+
 
   return searchOffer ? (
     <Card>
