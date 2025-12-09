@@ -1,0 +1,22 @@
+.centerCell {
+  display: flex;
+  align-items: center;     /* вертикально */
+  justify-content: center; /* горизонтально */
+  height: 100%;
+  width: 100%;
+}
+
+.Polaris-DataTable__Cell {
+  vertical-align: middle !important;
+}
+
+/* Центровка заголовков Polaris */
+.Polaris-DataTable__Heading,
+.Polaris-DataTable__Heading > span {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+  width: 100% !important;
+}
+
