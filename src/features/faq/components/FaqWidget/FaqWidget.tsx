@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback } from 'react';
 import {
   Card,
   BlockStack,
@@ -8,10 +8,10 @@ import {
   TextContainer,
   Divider,
   Icon,
-} from "@shopify/polaris";
-import { ChevronDownIcon } from "@shopify/polaris-icons";
-import { t } from "i18next";
-import { sendEvent } from "../../../../utils/sendEvent";
+} from '@shopify/polaris';
+import { ChevronDownIcon } from '@shopify/polaris-icons';
+import { t } from 'i18next';
+import { sendEvent } from '../../../../utils/sendEvent';
 
 export interface FaqItem {
   question: string;
@@ -33,15 +33,15 @@ export const FaqWidget: React.FC<FaqWidgetProps> = ({ faqs }) => {
   const [openIdx, setOpenIdx] = useState<number | null>(null);
 
   const handleToggle = useCallback((index: number) => {
-    setOpenIdx(prev => (prev === index ? null : index));
+    setOpenIdx((prev) => (prev === index ? null : index));
   }, []);
 
   return (
     <BlockStack gap="400">
       <Text as="h2" variant="headingLg" fontWeight="bold">
-        {t("FAQ.faq")}
+        {t('FAQ.faq')}
       </Text>
-      <Text as="p">{t("FAQ.quick")}</Text>
+      <Text as="p">{t('FAQ.quick')}</Text>
       <Card>
         <BlockStack gap="200">
           {faqs.map((faq, index) => (
@@ -52,22 +52,22 @@ export const FaqWidget: React.FC<FaqWidgetProps> = ({ faqs }) => {
                 tabIndex={0}
                 onClick={() => {
                   handleToggle(index);
-                  sendEvent("faq_question_click", { question: faq.question });
+                  sendEvent('faq_question_click', { question: faq.question });
                 }}
                 onKeyDown={(e: React.KeyboardEvent<HTMLDivElement>) => {
-                  if (e.key === "Enter" || e.key === " ") {
+                  if (e.key === 'Enter' || e.key === ' ') {
                     e.preventDefault();
                     handleToggle(index);
-                    sendEvent("faq_question_click", { question: faq.question });
+                    sendEvent('faq_question_click', { question: faq.question });
                   }
                 }}
                 aria-expanded={index === openIdx}
                 aria-controls={`faq-${index}`}
                 style={{
-                  cursor: "pointer",
-                  padding: "8px 0",
-                  width: "100%",
-                  outline: "none",
+                  cursor: 'pointer',
+                  padding: '8px 0',
+                  width: '100%',
+                  outline: 'none',
                 }}
               >
                 <InlineStack align="space-between" blockAlign="center">
@@ -77,9 +77,10 @@ export const FaqWidget: React.FC<FaqWidgetProps> = ({ faqs }) => {
                   <span
                     data-testid={`faq-chevron-${index}`}
                     style={{
-                      display: "inline-block",
-                      transition: "transform 0.3s",
-                      transform: index === openIdx ? "rotate(180deg)" : "rotate(0deg)",
+                      display: 'inline-block',
+                      transition: 'transform 0.3s',
+                      transform:
+                        index === openIdx ? 'rotate(180deg)' : 'rotate(0deg)',
                     }}
                   >
                     <Icon source={ChevronDownIcon} tone="base" />

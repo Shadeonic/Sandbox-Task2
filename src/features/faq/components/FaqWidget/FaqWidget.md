@@ -8,6 +8,7 @@ It uses Shopify Polaris components for layout and styling, with Tailwind classes
 ## Props
 
 ### `faqs` (required)
+
 - **Type:** `FaqItem[]`
 - **Shape:**
   ```ts
@@ -16,11 +17,12 @@ It uses Shopify Polaris components for layout and styling, with Tailwind classes
     answer: React.ReactNode;
   }
   ```
-Description: An array of FAQ items. Each item contains a question string and an answer React node (can be text, lists, links, etc.).
+  Description: An array of FAQ items. Each item contains a question string and an answer React node (can be text, lists, links, etc.).
 
 ---
 
 ## Behavior
+
 - Renders all FAQ questions in a vertical list.
 - Clicking a question toggles its answer open/closed.
 - Only one FAQ can be open at a time.
@@ -30,12 +32,13 @@ Description: An array of FAQ items. Each item contains a question string and an 
 ---
 
 ## Example Usage
+
 ```tsx
-import { FaqWidget } from "./FaqWidget";
+import { FaqWidget } from './FaqWidget';
 
 const faqs = [
   {
-    question: "How do I enable the App Embed?",
+    question: 'How do I enable the App Embed?',
     answer: (
       <ul>
         <li>Go to Shopify admin → Online Store → Customize</li>
@@ -46,10 +49,10 @@ const faqs = [
     ),
   },
   {
-    question: "Can I use the app with PageFly?",
+    question: 'Can I use the app with PageFly?',
     answer: (
       <p>
-        Yes, it works with PageFly, GemPages, and Shogun.{" "}
+        Yes, it works with PageFly, GemPages, and Shogun.{' '}
         <a
           href="https://libautech.crisp.help/en/article/can-i-use-the-app-with-theme-builders-pagefly-gempages-shogun-1yczadx/"
           target="_blank"
@@ -65,13 +68,15 @@ const faqs = [
 
 export function App() {
   return (
-  <AppProvider i18n={{}}>
-    <FaqWidget faqs={faqs} />
-  </AppProvider>
-  );  
+    <AppProvider i18n={{}}>
+      <FaqWidget faqs={faqs} />
+    </AppProvider>
+  );
 }
-``` 
+```
+
 ## Testing Notes
+
 - Use Vitest + React Testing Library.
 - Verify that all questions render.
 - Clicking toggles answer visibility.

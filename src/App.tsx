@@ -1,12 +1,19 @@
-import React from "react";
-import { AppProvider } from "@shopify/polaris";
-import "@shopify/polaris/build/esm/styles.css";
-import "./index.css";
+import React from 'react';
+import { AppProvider } from '@shopify/polaris';
+import '@shopify/polaris/build/esm/styles.css';
+import './index.css';
 
-import { BrowserRouter, Routes, Route, Link, Navigate, useParams } from "react-router-dom";
-import { FaqWidgetExample } from "@/features/faq/components/FaqWidget/FaqWidgetExample";
-import { ComponentDetailsPage } from "@/sandbox/pages/ComponentDetailsPage";
-import Page from "@/pages/Page";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Link,
+  Navigate,
+  useParams,
+} from 'react-router-dom';
+import { FaqWidgetExample } from '@/features/faq/components/FaqWidget/FaqWidgetExample';
+import { ComponentDetailsPage } from '@/sandbox/pages/ComponentDetailsPage';
+import Page from '@/pages/Page';
 
 export function App() {
   return (
@@ -17,7 +24,10 @@ export function App() {
           <nav className="w-64 border-r p-4">
             <ul className="space-y-2">
               <li>
-                <Link to="/components/faq-widget" className="text-blue-600 hover:underline">
+                <Link
+                  to="/components/faq-widget"
+                  className="text-blue-600 hover:underline"
+                >
                   FAQ Widget
                 </Link>
               </li>
@@ -33,7 +43,10 @@ export function App() {
           <section className="flex-1 p-6 overflow-y-auto">
             <Routes>
               {/* Default redirect goes to the FAQ docs/demo page */}
-              <Route path="/" element={<Navigate to="/components/faq-widget" replace />} />
+              <Route
+                path="/"
+                element={<Navigate to="/components/faq-widget" replace />}
+              />
 
               {/* FAQ demo route */}
               <Route path="/faq" element={<FaqWidgetExample />} />
@@ -42,7 +55,10 @@ export function App() {
               <Route path="/offers" element={<Page />} />
 
               {/* Component details route for docs integration */}
-              <Route path="/components/:componentId" element={<ComponentRouteWrapper />} />
+              <Route
+                path="/components/:componentId"
+                element={<ComponentRouteWrapper />}
+              />
             </Routes>
           </section>
         </main>

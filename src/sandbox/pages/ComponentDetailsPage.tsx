@@ -1,13 +1,15 @@
-import { useMemo } from "react";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
-import { componentsList } from "../data/componentsList";
+import { useMemo } from 'react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import { componentsList } from '../data/componentsList';
 
 type ComponentDetailsPageProps = {
   componentId: string; // e.g., "faq-widget"
 };
 
-export function ComponentDetailsPage({ componentId }: ComponentDetailsPageProps) {
+export function ComponentDetailsPage({
+  componentId,
+}: ComponentDetailsPageProps) {
   const item = useMemo(
     () => componentsList.find((c) => c.id === componentId),
     [componentId]
@@ -18,8 +20,8 @@ export function ComponentDetailsPage({ componentId }: ComponentDetailsPageProps)
   }
 
   const Example = item.example; // <-- use the example component
-  const componentMd = item.docs?.component ?? "";
-  const overviewMd = item.docs?.overview ?? "";
+  const componentMd = item.docs?.component ?? '';
+  const overviewMd = item.docs?.overview ?? '';
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6">
@@ -35,13 +37,17 @@ export function ComponentDetailsPage({ componentId }: ComponentDetailsPageProps)
 
         {overviewMd && (
           <article className="prose max-w-none">
-            <ReactMarkdown remarkPlugins={[remarkGfm]}>{overviewMd}</ReactMarkdown>
+            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+              {overviewMd}
+            </ReactMarkdown>
           </article>
         )}
 
         {componentMd && (
           <article className="prose max-w-none">
-            <ReactMarkdown remarkPlugins={[remarkGfm]}>{componentMd}</ReactMarkdown>
+            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+              {componentMd}
+            </ReactMarkdown>
           </article>
         )}
       </section>

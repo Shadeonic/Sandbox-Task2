@@ -1,2 +1,2 @@
-export { Table } from "./Table";
-export { TableExample } from "./TableExample";
+export { Table } from './Table';
+export { TableExample } from './TableExample';

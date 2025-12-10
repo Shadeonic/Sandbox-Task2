@@ -1,4 +1,4 @@
-import { useAppBridge } from "@shopify/app-bridge-react";
+import { useAppBridge } from '@shopify/app-bridge-react';
 import {
   Box,
   Button,
@@ -9,11 +9,11 @@ import {
   Pagination,
   SkeletonTabs,
   TextField,
-} from "@shopify/polaris";
-import React, { useEffect, useState } from "react";
-import { SearchIcon } from "@shopify/polaris-icons";
-import { t } from "i18next";
-import "./Table.css"; // 👈 импорт стилей
+} from '@shopify/polaris';
+import React, { useEffect, useState } from 'react';
+import { SearchIcon } from '@shopify/polaris-icons';
+import { t } from 'i18next';
+import './Table.css';
 
 function useDebounce<T>(value: T, delay: number): T {
   const [debouncedValue, setDebouncedValue] = useState(value);
@@ -27,12 +27,12 @@ function useDebounce<T>(value: T, delay: number): T {
 }
 
 interface TableProps {
-  contentTypes: ("text" | "numeric")[];
+  contentTypes: ('text' | 'numeric')[];
   headings: (string | React.ReactNode)[];
   rows: React.ReactNode[][];
   rowCount: number;
   changePage: (page: number, query?: string) => Promise<void>;
-  paginationMode: "client" | "server";
+  paginationMode: 'client' | 'server';
   searchOffer?: (query: string) => Promise<void>;
   noResults?: boolean;
   itemsPerPage?: number;
@@ -52,10 +52,13 @@ export const Table: React.FC<TableProps> = ({
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [displayRows, setDisplayRows] = useState<React.ReactNode[][]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-  const [search, setSearch] = useState<string>("");
+  const [search, setSearch] = useState<string>('');
   const debouncedSearch = useDebounce(search, 500);
-  const [searching, setSearching] = useState<{ query: string; isSearching: boolean }>({
-    query: "",
+  const [searching, setSearching] = useState<{
+    query: string;
+    isSearching: boolean;
+  }>({
+    query: '',
     isSearching: false,
   });
 
@@ -63,13 +66,13 @@ export const Table: React.FC<TableProps> = ({
   const endIndex = startIndex + itemsPerPage;
 
   useEffect(() => {
-    if (paginationMode === "client") {
+    if (paginationMode === 'client') {
       setDisplayRows(rows.slice(startIndex, endIndex));
     }
   }, [currentPage, rows, paginationMode]);
 
   useEffect(() => {
-    if (searchOffer && debouncedSearch !== "") {
+    if (searchOffer && debouncedSearch !== '') {
       shopify.loading(true);
       setLoading(true);
       setCurrentPage(1);
@@ -83,7 +86,7 @@ export const Table: React.FC<TableProps> = ({
 
   const handlePageChange = (newPage: number) => {
     setCurrentPage(newPage);
-    if (paginationMode === "server") {
+    if (paginationMode === 'server') {
       setLoading(true);
       if (searching.isSearching) {
         changePage(newPage, searching.query).then(() => {
@@ -99,31 +102,35 @@ export const Table: React.FC<TableProps> = ({
 
   const shopify = {
     loading: (state: boolean) => {
-      console.log("Mock loading:", state);
+      console.log('Mock loading:', state);
     },
   };
 
-  const skeletonRows = Array(3).fill(Array(headings.length).fill(<SkeletonTabs count={1} />));
+  const skeletonRows = Array(3).fill(
+    Array(headings.length).fill(<SkeletonTabs count={1} />)
+  );
 
-  let clientLabel = `Showing ${startIndex + 1}-${
-    Math.min(endIndex, paginationMode === "client" ? rows.length : rowCount)} 
-    of ${paginationMode === "client" ? rows.length : rowCount} results`;
+  let clientLabel = `Showing ${startIndex + 1}-${Math.min(
+    endIndex,
+    paginationMode === 'client' ? rows.length : rowCount
+  )} 
+    of ${paginationMode === 'client' ? rows.length : rowCount} results`;
 
-  let serverClient = `Showing ${startIndex + 1}-${
-    Math.min(endIndex, paginationMode === "client" ? rows.length : rowCount)} 
-    of ${paginationMode === "client" ? rows.length : rowCount} results`;
+  let serverClient = `Showing ${startIndex + 1}-${Math.min(
+    endIndex,
+    paginationMode === 'client' ? rows.length : rowCount
+  )} 
+    of ${paginationMode === 'client' ? rows.length : rowCount} results`;
 
   const wrapRows = (inputRows: React.ReactNode[][]): React.ReactNode[][] => {
-  return inputRows.map((row) =>
-    row.map((cell, i) => (
-      <div key={i} className="centerCell">
-        {cell}
-      </div>
-    ))
-  );
-};
-
-
+    return inputRows.map((row) =>
+      row.map((cell, i) => (
+        <div key={i} className="centerCell">
+          {cell}
+        </div>
+      ))
+    );
+  };
 
   return searchOffer ? (
     <Card>
@@ -132,7 +139,7 @@ export const Table: React.FC<TableProps> = ({
           <TextField
             label="Search"
             type="text"
-            placeholder={t("Search Offers") || "Search"}
+            placeholder={t('Search Offers') || 'Search'}
             value={search}
             onChange={(value) => setSearch(value)}
             autoComplete="off"
@@ -145,8 +152,8 @@ export const Table: React.FC<TableProps> = ({
                 shopify.loading(true);
                 setLoading(true);
                 setCurrentPage(1);
-                if (search === "") {
-                  setSearching({ query: "", isSearching: false });
+                if (search === '') {
+                  setSearching({ query: '', isSearching: false });
                 }
 
                 searchOffer(search).then(() => {
@@ -163,7 +170,10 @@ export const Table: React.FC<TableProps> = ({
         </Box>
       </InlineStack>
       {noResults ? (
-        <InlineError message={t("Table.noOffers") || "No offers found"} fieldID="myFieldID" />
+        <InlineError
+          message={t('Table.noOffers') || 'No offers found'}
+          fieldID="myFieldID"
+        />
       ) : (
         <div className="offersTableWrapper">
           <DataTable
@@ -172,9 +182,9 @@ export const Table: React.FC<TableProps> = ({
             rows={
               loading
                 ? skeletonRows
-                : paginationMode === "client"
-                ? wrapRows(displayRows)
-                : wrapRows(rows)
+                : paginationMode === 'client'
+                  ? wrapRows(displayRows)
+                  : wrapRows(rows)
             }
             footerContent={
               <InlineStack align="center" wrap={false} gap="400">
@@ -182,12 +192,14 @@ export const Table: React.FC<TableProps> = ({
                   hasPrevious={currentPage > 1}
                   onPrevious={() => handlePageChange(currentPage - 1)}
                   hasNext={
-                    paginationMode === "client"
+                    paginationMode === 'client'
                       ? currentPage * itemsPerPage < rows.length
                       : currentPage * itemsPerPage < rowCount
                   }
                   onNext={() => handlePageChange(currentPage + 1)}
-                  label={paginationMode === "client" ? clientLabel : serverClient}
+                  label={
+                    paginationMode === 'client' ? clientLabel : serverClient
+                  }
                 />
               </InlineStack>
             }
@@ -196,7 +208,10 @@ export const Table: React.FC<TableProps> = ({
       )}
     </Card>
   ) : noResults ? (
-    <InlineError message={t("Table.noOffers") || "No offers found"} fieldID="offersTable" />
+    <InlineError
+      message={t('Table.noOffers') || 'No offers found'}
+      fieldID="offersTable"
+    />
   ) : (
     <div className="offersTableWrapper">
       <DataTable
@@ -205,9 +220,9 @@ export const Table: React.FC<TableProps> = ({
         rows={
           loading
             ? skeletonRows
-            : paginationMode === "client"
-            ? wrapRows(displayRows)
-            : wrapRows(rows)
+            : paginationMode === 'client'
+              ? wrapRows(displayRows)
+              : wrapRows(rows)
         }
         footerContent={
           <InlineStack align="center" wrap={false} gap="400">
@@ -215,12 +230,12 @@ export const Table: React.FC<TableProps> = ({
               hasPrevious={currentPage > 1}
               onPrevious={() => handlePageChange(currentPage - 1)}
               hasNext={
-                paginationMode === "client"
+                paginationMode === 'client'
                   ? currentPage * itemsPerPage < rows.length
                   : currentPage * itemsPerPage < rowCount
               }
               onNext={() => handlePageChange(currentPage + 1)}
-              label={paginationMode === "client" ? clientLabel : serverClient}
+              label={paginationMode === 'client' ? clientLabel : serverClient}
             />
           </InlineStack>
         }
