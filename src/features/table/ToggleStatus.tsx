@@ -20,11 +20,9 @@ const ToggleStatus: React.FC<ToggleStatusProps> = ({ initialStatus, onToggle }) 
     <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
       <s-switch
       id="offer-switch"
-      label="Enable feature"
       checked={status === 'Active'}
       onChange={(e) => handleChange(e as unknown as CustomEvent<{ checked: boolean }>)}
     />
-      <span>{status === "Active" ? "On" : "Off"}</span>
     </div>
   );
 };
