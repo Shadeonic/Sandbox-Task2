@@ -13,6 +13,10 @@ import {
 // import type { BadgeProps } from "@shopify/polaris";
 import ToggleStatus from '@/features/table/ToggleStatus';
 
+/**
+ * Represents a single offer displayed in the table.
+ */
+
 interface Offer {
   _id: string;
   title: string;
@@ -24,9 +28,21 @@ interface Offer {
   status: 'Active' | 'Inactive';
 }
 
+/**
+ * Demo page that renders the Table component with mock offer data.
+ * Supports client-side pagination and server-style search simulation.
+ */
+
 const Page: React.FC = () => {
   const [offers, setOffers] = useState<Offer[]>([]);
   const [noResults, setNoResults] = useState<boolean>(false);
+
+  /**
+   * Formats a date string into 'DD MMM YYYY' format (e.g., '03 Dec 2025').
+   *
+   * @param dateStr - ISO date string
+   * @returns Formatted date string
+   */
 
   const formatDate = (dateStr: string): string => {
     const date = new Date(dateStr);
@@ -36,6 +52,14 @@ const Page: React.FC = () => {
       year: 'numeric',
     });
   };
+
+  /**
+   * Simulates fetching paginated offer data from a server.
+   * Filters mock offers by search query if provided.
+   *
+   * @param page - Page number to fetch
+   * @param query - Optional search query
+   */
 
   const changePage = async (page: number, query?: string) => {
     console.log('Mock fetch for page', page, 'query', query);
@@ -103,6 +127,12 @@ const Page: React.FC = () => {
     setNoResults(filtered.length === 0);
   };
 
+  /**
+   * Triggers a new search by resetting to page 1 with the given query.
+   *
+   * @param query - Search term to filter offers
+   */
+
   const searchOffer = async (query: string) => {
     await changePage(1, query);
   };
@@ -132,6 +162,8 @@ const Page: React.FC = () => {
     'text',
     'text',
   ];
+
+  // Transform offers into table rows with formatted cells and action buttons
 
   const rows = offers.map((offer, index) => [
     <p key={offer._id} style={{ textDecoration: 'underline' }}>

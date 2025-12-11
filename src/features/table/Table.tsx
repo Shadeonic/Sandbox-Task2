@@ -15,6 +15,15 @@ import { SearchIcon } from '@shopify/polaris-icons';
 import { t } from 'i18next';
 import './Table.css';
 
+/**
+ * Custom hook that returns a debounced version of a value.
+ *
+ * @template T
+ * @param value - The value to debounce
+ * @param delay - Delay in milliseconds
+ * @returns Debounced value
+ */
+
 function useDebounce<T>(value: T, delay: number): T {
   const [debouncedValue, setDebouncedValue] = useState(value);
 
@@ -27,16 +36,44 @@ function useDebounce<T>(value: T, delay: number): T {
 }
 
 interface TableProps {
+  /** Column content types: 'text' or 'numeric' */
   contentTypes: ('text' | 'numeric')[];
+  /** Column headers */
   headings: (string | React.ReactNode)[];
+  /** Table data rows */
   rows: React.ReactNode[][];
+  /** Total number of rows (used for pagination) */
   rowCount: number;
+  /** Callback for server-side pagination */
   changePage: (page: number, query?: string) => Promise<void>;
+  /** Pagination strategy: 'client' or 'server' */
   paginationMode: 'client' | 'server';
+  /** Optional callback for server-side search */
   searchOffer?: (query: string) => Promise<void>;
+  /** Whether to show a "no results" message */
   noResults?: boolean;
+  /** Number of items per page (default: 5) */
   itemsPerPage?: number;
 }
+
+/**
+ * Reusable Table component with support for:
+ * - Client-side and server-side pagination
+ * - Server-side search with debounced input
+ * - Custom row rendering and action buttons
+ * - Loading states and "no results" handling
+ *
+ * @component
+ * @param contentTypes - Array of column content types ('text' or 'numeric')
+ * @param headings - Array of column headings (text or React nodes)
+ * @param rows - 2D array of React nodes representing table rows
+ * @param rowCount - Total number of rows (used for pagination)
+ * @param changePage - Callback for server-side pagination
+ * @param paginationMode - Determines pagination strategy ('client' or 'server')
+ * @param searchOffer - Optional callback for server-side search
+ * @param noResults - Whether to show a "no results" message
+ * @param itemsPerPage - Number of items per page (default: 5)
+ */
 
 export const Table: React.FC<TableProps> = ({
   contentTypes,
@@ -71,6 +108,12 @@ export const Table: React.FC<TableProps> = ({
     }
   }, [currentPage, rows, paginationMode]);
 
+  /**
+   * Mock loading handler to simulate Shopify App Bridge loading state.
+   *
+   * @param state - Whether to show or hide loading indicator
+   */
+
   useEffect(() => {
     if (searchOffer && debouncedSearch !== '') {
       shopify.loading(true);
@@ -83,6 +126,14 @@ export const Table: React.FC<TableProps> = ({
       });
     }
   }, [debouncedSearch]);
+
+  /**
+   * Handles pagination logic based on the current mode.
+   * - In server mode, triggers `changePage` with optional search query.
+   * - In client mode, just updates local page state.
+   *
+   * @param newPage - The page number to navigate to
+   */
 
   const handlePageChange = (newPage: number) => {
     setCurrentPage(newPage);
@@ -106,10 +157,16 @@ export const Table: React.FC<TableProps> = ({
     },
   };
 
+  /**
+   * Placeholder rows shown while loading data.
+   * Uses Polaris SkeletonTabs to simulate table content.
+   */
   const skeletonRows = Array(3).fill(
     Array(headings.length).fill(<SkeletonTabs count={1} />)
   );
-
+  /**
+   * Pagination label for client-side mode.
+   */
   let clientLabel = `Showing ${startIndex + 1}-${Math.min(
     endIndex,
     paginationMode === 'client' ? rows.length : rowCount
@@ -121,6 +178,13 @@ export const Table: React.FC<TableProps> = ({
     paginationMode === 'client' ? rows.length : rowCount
   )} 
     of ${paginationMode === 'client' ? rows.length : rowCount} results`;
+
+  /**
+   * Wraps each cell in a div for vertical centering.
+   *
+   * @param inputRows - 2D array of React nodes (table rows)
+   * @returns Wrapped rows with centered cells
+   */
 
   const wrapRows = (inputRows: React.ReactNode[][]): React.ReactNode[][] => {
     return inputRows.map((row) =>
