@@ -22,7 +22,6 @@ import { t } from 'i18next';
  * @param delay - Delay in milliseconds
  * @returns Debounced value
  */
-
 function useDebounce<T>(value: T, delay: number): T {
   const [debouncedValue, setDebouncedValue] = useState(value);
 
@@ -73,7 +72,6 @@ interface TableProps {
  * @param noResults - Whether to show a "no results" message
  * @param itemsPerPage - Number of items per page (default: 5)
  */
-
 export const Table: React.FC<TableProps> = ({
   contentTypes,
   headings,
@@ -90,10 +88,7 @@ export const Table: React.FC<TableProps> = ({
   const [loading, setLoading] = useState<boolean>(false);
   const [search, setSearch] = useState<string>('');
   const debouncedSearch = useDebounce(search, 500);
-  const [searching, setSearching] = useState<{
-    query: string;
-    isSearching: boolean;
-  }>({
+  const [searching, setSearching] = useState<{ query: string; isSearching: boolean }>({
     query: '',
     isSearching: false,
   });
@@ -112,7 +107,6 @@ export const Table: React.FC<TableProps> = ({
    *
    * @param state - Whether to show or hide loading indicator
    */
-
   useEffect(() => {
     if (searchOffer && debouncedSearch !== '') {
       shopify.loading(true);
@@ -133,20 +127,15 @@ export const Table: React.FC<TableProps> = ({
    *
    * @param newPage - The page number to navigate to
    */
-
   const handlePageChange = (newPage: number) => {
     setCurrentPage(newPage);
     if (paginationMode === 'server') {
       setLoading(true);
       if (searching.isSearching) {
-        changePage(newPage, searching.query).then(() => {
-          setLoading(false);
-        });
+        changePage(newPage, searching.query).then(() => setLoading(false));
         return;
       }
-      changePage(newPage).then(() => {
-        setLoading(false);
-      });
+      changePage(newPage).then(() => setLoading(false));
     }
   };
 
@@ -160,9 +149,8 @@ export const Table: React.FC<TableProps> = ({
    * Placeholder rows shown while loading data.
    * Uses Polaris SkeletonTabs to simulate table content.
    */
-  const skeletonRows = Array(3).fill(
-    Array(headings.length).fill(<SkeletonTabs count={1} />)
-  );
+  const skeletonRows = Array(3).fill(Array(headings.length).fill(<SkeletonTabs count={1} />));
+
   /**
    * Pagination label for client-side mode.
    */
@@ -184,11 +172,11 @@ export const Table: React.FC<TableProps> = ({
    * @param inputRows - 2D array of React nodes (table rows)
    * @returns Wrapped rows with centered cells
    */
-
   const wrapRows = (inputRows: React.ReactNode[][]): React.ReactNode[][] => {
     return inputRows.map((row) =>
       row.map((cell, i) => (
-        <div key={i} 
+        <div
+          key={i}
           style={{
             display: 'flex',
             alignItems: 'center',       // vertical centering
@@ -203,6 +191,44 @@ export const Table: React.FC<TableProps> = ({
       ))
     );
   };
+
+  // Заголовки таблицы выровнены по левому краю
+  const wrappedHeadings = headings.map((heading, i) => (
+    <div key={i} style={{ textAlign: 'left' }}>
+      {heading}
+    </div>
+  ));
+
+  const tableContent = (
+    <div style={{ width: '100%', overflowX: 'auto', textAlign: 'left' }}>
+      <DataTable
+        columnContentTypes={contentTypes}
+        headings={wrappedHeadings}
+        rows={
+          loading
+            ? skeletonRows
+            : paginationMode === 'client'
+            ? wrapRows(displayRows)
+            : wrapRows(rows)
+        }
+        footerContent={
+          <InlineStack align="center" wrap={false} gap="400">
+            <Pagination
+              hasPrevious={currentPage > 1}
+              onPrevious={() => handlePageChange(currentPage - 1)}
+              hasNext={
+                paginationMode === 'client'
+                  ? currentPage * itemsPerPage < rows.length
+                  : currentPage * itemsPerPage < rowCount
+              }
+              onNext={() => handlePageChange(currentPage + 1)}
+              label={paginationMode === 'client' ? clientLabel : serverClient}
+            />
+          </InlineStack>
+        }
+      />
+    </div>
+  );
 
   return searchOffer ? (
     <Card>
@@ -247,36 +273,7 @@ export const Table: React.FC<TableProps> = ({
           fieldID="myFieldID"
         />
       ) : (
-        <div className="offersTableWrapper">
-          <DataTable
-            columnContentTypes={contentTypes}
-            headings={headings}
-            rows={
-              loading
-                ? skeletonRows
-                : paginationMode === 'client'
-                  ? wrapRows(displayRows)
-                  : wrapRows(rows)
-            }
-            footerContent={
-              <InlineStack align="center" wrap={false} gap="400">
-                <Pagination
-                  hasPrevious={currentPage > 1}
-                  onPrevious={() => handlePageChange(currentPage - 1)}
-                  hasNext={
-                    paginationMode === 'client'
-                      ? currentPage * itemsPerPage < rows.length
-                      : currentPage * itemsPerPage < rowCount
-                  }
-                  onNext={() => handlePageChange(currentPage + 1)}
-                  label={
-                    paginationMode === 'client' ? clientLabel : serverClient
-                  }
-                />
-              </InlineStack>
-            }
-          />
-        </div>
+        tableContent
       )}
     </Card>
   ) : noResults ? (
@@ -285,33 +282,6 @@ export const Table: React.FC<TableProps> = ({
       fieldID="offersTable"
     />
   ) : (
-    <div className="offersTableWrapper">
-      <DataTable
-        columnContentTypes={contentTypes}
-        headings={headings}
-        rows={
-          loading
-            ? skeletonRows
-            : paginationMode === 'client'
-              ? wrapRows(displayRows)
-              : wrapRows(rows)
-        }
-        footerContent={
-          <InlineStack align="center" wrap={false} gap="400">
-            <Pagination
-              hasPrevious={currentPage > 1}
-              onPrevious={() => handlePageChange(currentPage - 1)}
-              hasNext={
-                paginationMode === 'client'
-                  ? currentPage * itemsPerPage < rows.length
-                  : currentPage * itemsPerPage < rowCount
-              }
-              onNext={() => handlePageChange(currentPage + 1)}
-              label={paginationMode === 'client' ? clientLabel : serverClient}
-            />
-          </InlineStack>
-        }
-      />
-    </div>
+    tableContent
   );
 };
