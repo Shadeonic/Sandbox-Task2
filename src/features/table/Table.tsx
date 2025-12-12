@@ -13,7 +13,6 @@ import {
 import React, { useEffect, useState } from 'react';
 import { SearchIcon } from '@shopify/polaris-icons';
 import { t } from 'i18next';
-import './Table.css';
 
 /**
  * Custom hook that returns a debounced version of a value.
@@ -189,7 +188,16 @@ export const Table: React.FC<TableProps> = ({
   const wrapRows = (inputRows: React.ReactNode[][]): React.ReactNode[][] => {
     return inputRows.map((row) =>
       row.map((cell, i) => (
-        <div key={i} className="centerCell">
+        <div key={i} 
+          style={{
+            display: 'flex',
+            alignItems: 'center',       // vertical centering
+            justifyContent: 'flex-start', // horizontal left alignment
+            textAlign: 'left',            // ensures text aligns left
+            height: '100%',               // optional: ensures full cell height
+            width: '100%',                // optional: ensures full cell width
+          }}
+        >
           {cell}
         </div>
       ))
