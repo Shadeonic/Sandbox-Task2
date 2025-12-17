@@ -13,6 +13,17 @@ import {
 import { FaqWidgetExample } from '@/features/faq/components/FaqWidget/FaqWidgetExample';
 import { ComponentDetailsPage } from '@/sandbox/pages/ComponentDetailsPage';
 import Page from '@/pages/Page';
+import { EmbedStatus } from "@/features/status/EmbedStatus";
+
+const mockAllBlocks = {
+  ugc: {
+    index: true,
+    product: false,
+    cart: false,
+    collection: false,
+    collectionList: false,
+  },
+};
 
 export function App() {
   return (
@@ -35,6 +46,11 @@ export function App() {
                   Offers Table
                 </Link>
               </li>
+              <li>
+                <Link to="/embed-status" className="text-blue-600 hover:underline">
+                  Embed Status
+                </Link>
+              </li>
             </ul>
           </nav>
 
@@ -52,6 +68,16 @@ export function App() {
 
               {/* Offers table route */}
               <Route path="/offers" element={<Page />} />
+
+              <Route
+                path="/embed-status"
+                element={
+                  <EmbedStatus
+                    allBlocks={mockAllBlocks}
+                    themeStoreId="demo-theme-id"
+                  />
+                }
+              />
 
               {/* Component details route for docs integration */}
               <Route
