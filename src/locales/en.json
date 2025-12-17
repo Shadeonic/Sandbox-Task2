@@ -10,7 +10,6 @@
     "1.4": "Optional: Clear cache if changes don’t appear",
     "1.5": "Ensure your theme supports app embeds",
     "1.6": "Learn more",
-
     "q2": "My offer isn’t showing up — what should I do?",
     "2.1": "Check if the app embed is enabled",
     "2.2": "Verify product eligibility",
@@ -21,31 +20,42 @@
     "2.6": "Offers may take a few minutes to appear.",
     "2.8": "See full guide:",
     "2.9": "Troubleshooting guide",
-
     "q3": "How do I reposition the widget?",
     "3.1": "Use theme editor to drag the widget",
     "3.2": "Save changes",
     "3.3": "Check mobile layout separately",
     "3.4": "Ensure widget doesn’t overlap other elements",
     "3.5": "Reposition instructions",
-
     "q4": "Which themes are supported?",
     "4.1": "Dawn",
     "4.2": "Sense",
     "4.3": "Craft",
     "4.4": "Other Online Store 2.0 themes",
-
     "q5": "Can I use the app with PageFly?",
     "5.1": "Yes, it works with PageFly, GemPages, and Shogun.",
     "5.2": "Enable app embed in Shopify admin",
     "5.3": "Add widget block in PageFly editor",
     "5.4": "Publish changes",
-
     "q6": "How do I troubleshoot widget issues?",
     "6.1": "Check if app embed is enabled",
     "6.2": "Verify theme compatibility",
     "6.3": "Follow reposition guide",
     "6.4": "Contact support if issues persist",
     "6.7": "Theme builder compatibility"
+  },
+  "Ext": {
+    "extensionStatus": "Extension Status",
+    "extensionStatusDescription": "This shows which blocks are active on which pages.",
+    "addTo": "Add to",
+    "blocks": {
+      "ugc": "User Generated Content"
+    },
+    "pages": {
+      "index": "Home",
+      "product": "Product",
+      "cart": "Cart",
+      "collection": "Collection",
+      "collectionList": "Collection List"
+    }
   }
 }

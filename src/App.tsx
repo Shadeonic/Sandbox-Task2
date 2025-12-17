@@ -25,6 +25,30 @@ const mockAllBlocks = {
   },
 };
 
+// Error boundary to catch render issues
+class ErrorBoundary extends React.Component<{ children: React.ReactNode }, { error: any }> {
+  constructor(props: any) {
+    super(props);
+    this.state = { error: null };
+  }
+  static getDerivedStateFromError(error: any) {
+    return { error };
+  }
+  componentDidCatch(error: any, info: any) {
+    console.error("ErrorBoundary caught:", error, info);
+  }
+  render() {
+    if (this.state.error) {
+      return (
+        <div className="p-6 text-red-600">
+          Error rendering component: {String(this.state.error)}
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
 export function App() {
   return (
     <AppProvider i18n={{}}>
@@ -57,29 +81,23 @@ export function App() {
           {/* Main content area */}
           <section className="flex-1 p-6 overflow-y-auto">
             <Routes>
-              {/* Default redirect goes to the FAQ docs/demo page */}
               <Route
                 path="/"
                 element={<Navigate to="/components/faq-widget" replace />}
               />
-
-              {/* FAQ demo route */}
               <Route path="/faq" element={<FaqWidgetExample />} />
-
-              {/* Offers table route */}
               <Route path="/offers" element={<Page />} />
-
               <Route
                 path="/embed-status"
                 element={
-                  <EmbedStatus
-                    allBlocks={mockAllBlocks}
-                    themeStoreId="demo-theme-id"
-                  />
+                  <ErrorBoundary>
+                    <EmbedStatus
+                      allBlocks={mockAllBlocks}
+                      themeStoreId="demo-theme-id"
+                    />
+                  </ErrorBoundary>
                 }
               />
-
-              {/* Component details route for docs integration */}
               <Route
                 path="/components/:componentId"
                 element={<ComponentRouteWrapper />}
@@ -92,9 +110,6 @@ export function App() {
   );
 }
 
-/**
- * Wrapper to extract :componentId param and render ComponentDetailsPage
- */
 function ComponentRouteWrapper() {
   const { componentId } = useParams();
   if (!componentId) return <div>No component selected.</div>;

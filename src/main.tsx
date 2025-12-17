@@ -1,7 +1,7 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { App } from './App';
-
+import '@shopify/polaris/build/esm/styles.css';
 // Import i18n setup so translations are initialized
 import './i18n';
 import './global.d.ts';

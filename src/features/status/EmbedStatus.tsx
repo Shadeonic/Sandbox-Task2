@@ -1,12 +1,12 @@
 import {
   ActionList,
-  Badge,
   BlockStack,
   Button,
   Card,
   Divider,
   Icon,
   InlineStack,
+  Link,
   Popover,
   Text,
 } from "@shopify/polaris";
@@ -18,15 +18,13 @@ import {
   CollectionListIcon,
   HomeIcon,
   ProductIcon,
+  ChatIcon,
+  ExternalIcon,
 } from "@shopify/polaris-icons";
-import { t } from "i18next";
-import { useAppBridge } from "@shopify/app-bridge-react";
 import { useCallback, useState } from "react";
-// import { getEmbedURLs } from "libautech-frontend";
-
+import "@shopify/polaris/build/esm/styles.css";
 import { getEmbedURLs } from "@/lib/getEmbedURLs";
 
-// Types
 type PageMap = Record<string, boolean>;
 type AllBlocks = Record<string, PageMap>;
 
@@ -38,17 +36,16 @@ interface EmbedStatusProps {
 
 const defaultPages = ["index", "product", "cart", "collection", "collectionList"];
 
-interface PageOption {
-  label: string;
-  value: string;
-}
+const pageLabelMap: Record<string, string> = {
+  index: "Home",
+  product: "Product",
+  cart: "Cart",
+  collection: "Collection",
+  collectionList: "Collection List",
+};
 
-// Helpers
-const addToPages = (pages: string[] = defaultPages): PageOption[] => {
-  return pages.map((page) => ({
-    label: t(`Ext.pages.${page}`),
-    value: page,
-  }));
+const blockLabelMap: Record<string, string> = {
+  ugc: "UGC Carousel",
 };
 
 const iconMap = (page: string): IconSource => {
@@ -59,72 +56,110 @@ const iconMap = (page: string): IconSource => {
       return ProductIcon;
     case "cart":
       return CartIcon;
-    case "collectionList":
-      return CollectionListIcon;
     case "collection":
       return CollectionFeaturedIcon;
+    case "collectionList":
+      return CollectionListIcon;
     default:
       return AppExtensionIcon;
   }
 };
 
-// Component
-export const EmbedStatus: React.FC<EmbedStatusProps> = ({ allBlocks, themeStoreId, availablePages }) => {
-  const shopify = useAppBridge();
+export const EmbedStatus: React.FC<EmbedStatusProps> = ({
+  allBlocks,
+  themeStoreId,
+  availablePages,
+}) => {
   const [activeBlock, setActiveBlock] = useState<string | null>(null);
 
   const toggleActive = useCallback((block: string) => {
     setActiveBlock((prev) => (prev === block ? null : block));
-}, []);
+  }, []);
 
   const renderActivator = (block: string) => (
-  <Button
-    onClick={() => toggleActive(block)}
-    disclosure
-    size="micro"
-  >
-    {t("Ext.addTo")}
-  </Button>
-);
+    <Button
+      size="micro"
+      variant="secondary"
+      disclosure
+      onClick={() => toggleActive(block)}
+    >
+      Add To
+    </Button>
+  );
+
+  const visiblePages = availablePages ?? defaultPages;
 
   return (
-    <Card>
-      <BlockStack gap="200">
-        <BlockStack gap="100">
-          <Text as="h2" variant="headingMd" fontWeight="bold">
-            {t("Ext.extensionStatus")}
-          </Text>
-          <Text as="p" variant="bodyMd">
-            {t("Ext.extensionStatusDescription")}
-          </Text>
-        </BlockStack>
-        <Divider />
-        <BlockStack gap="200">
-          {Object.entries(allBlocks).map(([block, pages]) => (
-            <div key={block} className="flex items-center gap-2 justify-between">
-              <InlineStack gap="100" blockAlign="center" align="start">
-                <span>
-                  <Icon source={AppExtensionIcon} />
-                </span>
-                <Text as="p" variant="bodyMd" fontWeight="medium">
-                  {t(`Ext.blocks.${block}`)}
-                </Text>
-              </InlineStack>
+    <BlockStack gap="400">
+      <Card>
+        <BlockStack gap="300">
+          {/* Header */}
+          <BlockStack gap="100">
+            <Text as="h2" variant="headingMd" fontWeight="bold">
+              Block Status
+            </Text>
+            <Text as="p" variant="bodyMd" tone="subdued">
+              Enable or disable the block in your theme editor to show or hide it
+              from your store.
+            </Text>
+          </BlockStack>
 
-              <InlineStack gap="200">
-                <InlineStack gap="100" blockAlign="center" align="end">
-                  {Object.entries(pages).map(([page, enabled]) => (
-                    <Badge
-                      key={`${block}-${page}`}
-                      tone={enabled ? "success" : undefined}
-                      progress={enabled ? "complete" : "incomplete"}
-                    >
-                      {t(`Ext.pages.${page}`)}
-                    </Badge>
-                  ))}
+          <Divider />
+
+          {/* Blocks */}
+          <BlockStack gap="200">
+            {Object.entries(allBlocks).map(([block, pages]) => (
+              <InlineStack
+                key={block}
+                align="space-between"
+                blockAlign="center"
+                gap="200"
+              >
+                {/* Block name */}
+                <InlineStack gap="100" blockAlign="center">
+                  <Icon source={AppExtensionIcon} />
+                  <Text as="span" variant="bodyMd" fontWeight="medium">
+                    {blockLabelMap[block] ?? block}
+                  </Text>
                 </InlineStack>
 
-                <div className="flex items-center justify-end">
+                {/* Pages + Add To */}
+                <InlineStack gap="200" blockAlign="center">
+                  {/* Pills */}
+                  <InlineStack gap="100">
+                    {Object.entries(pages)
+                      .filter(([page]) => visiblePages.includes(page))
+                      .map(([page, enabled]) => (
+                        <div
+                          key={`${block}-${page}`}
+                          style={{
+                            padding: "2px 6px",
+                            borderRadius: "12px",
+                            border: "1px solid #C9CCCF",
+                            backgroundColor: enabled ? "#F0FFF4" : "#F9FAFB",
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "4px",
+                          }}
+                        >
+                          <span
+                            style={{
+                              width: "8px",
+                              height: "8px",
+                              borderRadius: "50%",
+                              backgroundColor: enabled ? "#2E7D32" : "#8C9196",
+                              display: "inline-block",
+                              flexShrink: 0,
+                            }}
+                          />
+                          <Text as="span" variant="bodySm">
+                            {pageLabelMap[page] ?? page}
+                          </Text>
+                        </div>
+                      ))}
+                  </InlineStack>
+
+                  {/* Add To */}
                   <Popover
                     active={activeBlock === block}
                     activator={renderActivator(block)}
@@ -133,22 +168,68 @@ export const EmbedStatus: React.FC<EmbedStatusProps> = ({ allBlocks, themeStoreI
                   >
                     <ActionList
                       actionRole="menuitem"
-                      items={addToPages(availablePages ?? defaultPages).map((page) => ({
-                        prefix: <Icon source={iconMap(page.value)} />,
-                        content: page.label,
+                      items={visiblePages.map((page) => ({
+                        prefix: <Icon source={iconMap(page)} />,
+                        content: pageLabelMap[page] ?? page,
                         onAction: () => {
-                          const url = getEmbedURLs(themeStoreId)?.[block]?.[page.value];
+                          const url =
+                            getEmbedURLs(themeStoreId)?.[block]?.[page];
                           if (url) window.open(url, "_blank");
                         },
                       }))}
                     />
                   </Popover>
-                </div>
+                </InlineStack>
               </InlineStack>
-            </div>
-          ))}
+            ))}
+          </BlockStack>
         </BlockStack>
+      </Card>
+
+      {/* Help section */}
+      {/* Help section */}
+      <BlockStack gap="200" inlineAlign="center">
+        <Divider />
+
+        <Text as="h3" variant="headingSm" fontWeight="bold">
+          Need help?
+        </Text>
+
+        <InlineStack gap="300" align="center">
+          {/* Chat with us — серый, без подчёркивания */}
+          <Link
+            url="https://your-chat-url.com"
+            removeUnderline
+            monochrome
+          >
+            <InlineStack gap="100" blockAlign="center">
+              <Icon source={ChatIcon} tone="subdued" />
+              <Text as="span" variant="bodyMd" tone="subdued">
+                Chat with us
+              </Text>
+            </InlineStack>
+          </Link>
+
+          {/* Visit help page — серый, С подчёркиванием */}
+          <Link
+            url="https://your-help-page.com"
+            monochrome
+          >
+            <InlineStack gap="100" blockAlign="center">
+              <Icon source={ExternalIcon} tone="subdued" />
+              <Text as="span" variant="bodyMd" tone="subdued">
+                Visit help page
+              </Text>
+            </InlineStack>
+          </Link>
+        </InlineStack>
+
+        <Text as="p" variant="bodyMd" tone="subdued" alignment="center">
+          Get instant support through chat or browse our comprehensive help
+          documentation
+        </Text>
       </BlockStack>
-    </Card>
+
+    </BlockStack>
   );
 };
