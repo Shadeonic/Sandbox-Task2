@@ -2,6 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { Table } from '@/features/table/Table';
 import { Button } from '@shopify/polaris';
 import { ButtonGroup } from '@shopify/polaris';
+import type { Offer } from '@/types/offer';
+import { mockOffers } from '@/mocks/offers';
+
 import {
   EditIcon,
   DuplicateIcon,
@@ -17,16 +20,6 @@ import ToggleStatus from '@/features/table/ToggleStatus';
  * Represents a single offer displayed in the table.
  */
 
-interface Offer {
-  _id: string;
-  title: string;
-  type: string;
-  createdAt: string;
-  views: number;
-  clicks: number;
-  orders: number;
-  status: 'Active' | 'Inactive';
-}
 
 /**
  * Demo page that renders the Table component with mock offer data.
@@ -63,59 +56,6 @@ const Page: React.FC = () => {
 
   const changePage = async (page: number, query?: string) => {
     console.log('Mock fetch for page', page, 'query', query);
-
-    const mockOffers: Offer[] = [
-      {
-        _id: '1',
-        title: 'Volume discount #3',
-        type: 'Volume Discount',
-        createdAt: '2025-12-03',
-        views: 0,
-        clicks: 0,
-        orders: 0,
-        status: 'Active',
-      },
-      {
-        _id: '2',
-        title: 'Product addons #2',
-        type: 'Product Add-ons',
-        createdAt: '2025-11-20',
-        views: 0,
-        clicks: 0,
-        orders: 0,
-        status: 'Inactive',
-      },
-      {
-        _id: '3',
-        title: 'Cart drawer addons #2',
-        type: 'Cart Drawer Add-ons',
-        createdAt: '2025-10-28',
-        views: 0,
-        clicks: 0,
-        orders: 0,
-        status: 'Active',
-      },
-      {
-        _id: '4',
-        title: 'Product addons #1',
-        type: 'Product Add-ons',
-        createdAt: '2025-09-11',
-        views: 0,
-        clicks: 0,
-        orders: 0,
-        status: 'Inactive',
-      },
-      {
-        _id: '5',
-        title: 'Volume discount #2',
-        type: 'Volume Discount',
-        createdAt: '2025-09-09',
-        views: 0,
-        clicks: 0,
-        orders: 0,
-        status: 'Inactive',
-      },
-    ];
 
     const filtered = query
       ? mockOffers.filter((offer) =>
