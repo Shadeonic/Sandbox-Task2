@@ -165,5 +165,3 @@ export const FaqWidgetExample: React.FC = () => {
 
   return <FaqWidget faqs={faqs} />;
 };
-
-export default FaqWidgetExample;

@@ -24,7 +24,7 @@ import {
 import { useCallback, useState } from "react";
 import "@shopify/polaris/build/esm/styles.css";
 import { getEmbedURLs } from "@/lib/getEmbedURLs";
-
+//Converted to TypeScript - Added proper type annotations for props and data structures
 type PageMap = Record<string, boolean>;
 type AllBlocks = Record<string, PageMap>;
 
@@ -33,7 +33,8 @@ interface EmbedStatusProps {
   themeStoreId: string;
   availablePages?: string[];
 }
-
+//Introduced optional availablePages prop
+//If not provided, falls back to default pages:
 const defaultPages = ["index", "product", "cart", "collection", "collectionList"];
 
 const pageLabelMap: Record<string, string> = {
@@ -173,7 +174,7 @@ export const EmbedStatus: React.FC<EmbedStatusProps> = ({
                         content: pageLabelMap[page] ?? page,
                         onAction: () => {
                           const url =
-                            getEmbedURLs(themeStoreId)?.[block]?.[page];
+                            getEmbedURLs(themeStoreId)?.[block]?.[page];//Made getEmbedURLs dynamic
                           if (url) window.open(url, "_blank");
                         },
                       }))}
@@ -196,7 +197,6 @@ export const EmbedStatus: React.FC<EmbedStatusProps> = ({
         </Text>
 
         <InlineStack gap="300" align="center">
-          {/* Chat with us — серый, без подчёркивания */}
           <Link
             url="https://your-chat-url.com"
             removeUnderline
@@ -210,7 +210,6 @@ export const EmbedStatus: React.FC<EmbedStatusProps> = ({
             </InlineStack>
           </Link>
 
-          {/* Visit help page — серый, С подчёркиванием */}
           <Link
             url="https://your-help-page.com"
             monochrome

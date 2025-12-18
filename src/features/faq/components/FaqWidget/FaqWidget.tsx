@@ -36,6 +36,13 @@ export const FaqWidget: React.FC<FaqWidgetProps> = ({ faqs }) => {
     setOpenIdx((prev) => (prev === index ? null : index));
   }, []);
 
+  //reduce dry
+  const handleInteraction = (index: number) => {
+  handleToggle(index);
+  sendEvent('faq_question_click', { question: faqs[index].question });
+};
+
+
   return (
     <BlockStack gap="400">
       <Text as="h2" variant="headingLg" fontWeight="bold">
@@ -51,24 +58,17 @@ export const FaqWidget: React.FC<FaqWidgetProps> = ({ faqs }) => {
                 role="button"
                 tabIndex={0}
                 onClick={() => {
-                  handleToggle(index);
-                  sendEvent('faq_question_click', { question: faq.question });
+                  handleInteraction(index);
                 }}
                 onKeyDown={(e: React.KeyboardEvent<HTMLDivElement>) => {
                   if (e.key === 'Enter' || e.key === ' ') {
                     e.preventDefault();
-                    handleToggle(index);
-                    sendEvent('faq_question_click', { question: faq.question });
+                    handleInteraction(index);
                   }
                 }}
                 aria-expanded={index === openIdx}
                 aria-controls={`faq-${index}`}
-                style={{
-                  cursor: 'pointer',
-                  padding: '8px 0',
-                  width: '100%',
-                  outline: 'none',
-                }}
+                className="cursor-pointer py-2 w-full outline-none"
               >
                 <InlineStack align="space-between" blockAlign="center">
                   <Text as="h3" variant="headingMd" fontWeight="semibold">
@@ -76,12 +76,9 @@ export const FaqWidget: React.FC<FaqWidgetProps> = ({ faqs }) => {
                   </Text>
                   <span
                     data-testid={`faq-chevron-${index}`}
-                    style={{
-                      display: 'inline-block',
-                      transition: 'transform 0.3s',
-                      transform:
-                        index === openIdx ? 'rotate(180deg)' : 'rotate(0deg)',
-                    }}
+                    className={`inline-block transition-transform duration-300 ${
+                    index === openIdx ? 'rotate-180' : ''
+                  }`}
                   >
                     <Icon source={ChevronDownIcon} tone="base" />
                   </span>

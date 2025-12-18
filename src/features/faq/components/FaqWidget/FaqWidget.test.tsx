@@ -3,6 +3,17 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { AppProvider } from '@shopify/polaris';
 import { FaqWidget } from './FaqWidget';
 import type { FaqItem } from './FaqWidget';
+import { vi } from 'vitest';
+import { sendEvent } from '../../../../utils/sendEvent';
+vi.mock('../../../../utils/sendEvent', () => ({
+  sendEvent: vi.fn(),
+}));
+
+let utils: ReturnType<typeof render>;
+
+beforeEach(() => {
+  utils = renderWithPolaris(<FaqWidget faqs={faqs} />);
+});
 
 function renderWithPolaris(ui: React.ReactElement) {
   return render(<AppProvider i18n={{}}>{ui}</AppProvider>);
@@ -21,7 +32,6 @@ const faqs: FaqItem[] = [
 
 describe('FaqWidget', () => {
   it('renders all FAQ questions', () => {
-    renderWithPolaris(<FaqWidget faqs={faqs} />);
     expect(
       screen.getByText('How do I enable the App Embed?')
     ).toBeInTheDocument();
@@ -31,7 +41,6 @@ describe('FaqWidget', () => {
   });
 
   it('toggles answer visibility when a question is clicked', () => {
-    renderWithPolaris(<FaqWidget faqs={faqs} />);
     const firstQuestion = screen.getByText('How do I enable the App Embed?');
     const answerContainer = document.getElementById('faq-0');
 
@@ -49,7 +58,6 @@ describe('FaqWidget', () => {
   });
 
   it('only allows one FAQ open at a time', () => {
-    renderWithPolaris(<FaqWidget faqs={faqs} />);
     const firstQuestion = screen.getByText('How do I enable the App Embed?');
     const secondQuestion = screen.getByText('Can I use the app with PageFly?');
     const firstAnswerContainer = document.getElementById('faq-0');
@@ -64,16 +72,42 @@ describe('FaqWidget', () => {
   });
 
   it('rotates chevron when open', () => {
-    renderWithPolaris(<FaqWidget faqs={faqs} />);
     const firstQuestion = screen.getByText('How do I enable the App Embed?');
     const chevron = screen.getByTestId('faq-chevron-0');
 
     // Initially not rotated
-    expect(chevron).toHaveStyle('transform: rotate(0deg)');
+    expect(chevron.className).not.toContain('rotate-180');
+    fireEvent.click(firstQuestion);
+    expect(chevron.className).toContain('rotate-180');
+
+  });
+
+  it('calls sendEvent when a question is clicked', () => {
+    const firstQuestion = screen.getByText('How do I enable the App Embed?');
 
     fireEvent.click(firstQuestion);
+    expect(sendEvent).toHaveBeenCalledWith('faq_question_click', {
+      question: 'How do I enable the App Embed?',
+    });
+  });
 
-    // After expansion rotated
-    expect(chevron).toHaveStyle('transform: rotate(180deg)');
+  it('sets aria-expanded correctly on toggle', () => {
+  const toggleButton = screen.getByRole('button', {
+    name: /how do i enable the app embed/i,
+  });
+
+  expect(toggleButton).toHaveAttribute('aria-expanded', 'false');
+  fireEvent.click(toggleButton);
+  expect(toggleButton).toHaveAttribute('aria-expanded', 'true');
+  });
+
+  it('toggles FAQ with Enter and Space keys', () => {
+    const firstQuestion = screen.getByText('How do I enable the App Embed?');
+
+    fireEvent.keyDown(firstQuestion.parentElement!, { key: 'Enter' });
+    expect(document.getElementById('faq-0')).toHaveAttribute('aria-hidden', 'false');
+
+    fireEvent.keyDown(firstQuestion.parentElement!, { key: ' ' });
+    expect(document.getElementById('faq-0')).toHaveAttribute('aria-hidden', 'true');
   });
 });
