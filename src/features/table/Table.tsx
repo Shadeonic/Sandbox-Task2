@@ -174,15 +174,7 @@ export const Table: React.FC<TableProps> = ({
       row.map((cell, i) => (
         <div
           key={i}
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'flex-start',
-            textAlign: 'left',
-            width: '100%',
-            height: '100%',
-          }}
-        >
+          className="flex items-center justify-start text-left w-full h-full">
           {cell}
         </div>
       ))
@@ -192,13 +184,13 @@ export const Table: React.FC<TableProps> = ({
    * Table headings aligned to the left.
    */
   const wrappedHeadings = headings.map((heading, i) => (
-    <div key={i} style={{ textAlign: 'left' }}>
+    <div key={i} className="text-left">
       {heading}
     </div>
   ));
 
   const tableContent = (
-    <div style={{ width: '100%', overflowX: 'auto' }}>
+    <div className="w-full overflow-x-auto">
       <DataTable
         columnContentTypes={contentTypes}
         headings={wrappedHeadings}
@@ -224,7 +216,8 @@ export const Table: React.FC<TableProps> = ({
     </div>
   );
 
-  return searchOffer ? (
+  if (searchOffer) {
+  return (
     <Card>
       <InlineStack align="start" blockAlign="center" gap="200" wrap={false}>
         <Box width="100%">
@@ -253,12 +246,18 @@ export const Table: React.FC<TableProps> = ({
         tableContent
       )}
     </Card>
-  ) : noResults ? (
+  );
+  }
+
+  if (noResults) {
+  return (
     <InlineError
       message={t('Table.noOffers') || 'No offers found'}
       fieldID="offersTable"
     />
-  ) : (
-    tableContent
   );
+}
+
+// ✅ Fallback return
+return tableContent;
 };

@@ -1,5 +1,3 @@
-import { useState } from 'react';
-
 /**
  * Simple placeholder store for FAQ state management.
  *
@@ -23,6 +21,3 @@ export const faqStore = {
       faqStore.state.openIndex === index ? null : index;
   },
 };
-
-//komponentā šis state...remove doubled pagiantion
-//centralized change handlings un kaut kādi buttons, refactors, formmatings
