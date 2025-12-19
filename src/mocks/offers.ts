@@ -54,4 +54,15 @@ export const mockOffers: Offer[] = [
     orders: 0,
     status: 'Inactive',
   },
+
+  {
+    _id: '6',
+    title: 'Test discount #2',
+    type: 'gdb Discount',
+    createdAt: '2025-09-09',
+    views: 0,
+    clicks: 0,
+    orders: 0,
+    status: 'Inactive',
+  },
 ];
