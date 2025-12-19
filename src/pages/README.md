@@ -16,13 +16,13 @@ The `Page` component serves as the main container for displaying and managing a 
 
 ## Internal State
 
-| State Variable | Type              | Description |
-|----------------|-------------------|-------------|
-| `offers`       | `ReactNode[][]`   | Table rows generated from fetched data |
-| `loading`      | `boolean`         | Indicates whether data is being fetched |
-| `noResults`    | `boolean`         | Whether the search returned no results |
-| `query`        | `string`          | Current search input |
-| `page`         | `number`          | Current page number |
+| State Variable | Type            | Description                             |
+| -------------- | --------------- | --------------------------------------- |
+| `offers`       | `ReactNode[][]` | Table rows generated from fetched data  |
+| `loading`      | `boolean`       | Indicates whether data is being fetched |
+| `noResults`    | `boolean`       | Whether the search returned no results  |
+| `query`        | `string`        | Current search input                    |
+| `page`         | `number`        | Current page number                     |
 
 ---
 
@@ -33,9 +33,11 @@ This component is typically used as a full-page view. It renders the `Table` and
 ```tsx
 <Page />
 ```
+
 ---
 
 ## Behavior
+
 - On mount, fetches the first page of offers
 - When the user types in the search field:
 - Debounces the input
@@ -48,7 +50,9 @@ This component is typically used as a full-page view. It renders the `Table` and
 ---
 
 ## Test Coverage
+
 Tests are located in Page.test.tsx and include:
+
 - Renders the table with mock offers
 - Filters offers based on search input
 - Displays "no results" message when search yields nothing
@@ -57,6 +61,7 @@ Tests are located in Page.test.tsx and include:
 ---
 
 ## Notes
+
 - Uses useEffect to trigger data fetching on mount and when page or query changes
 - Relies on a mock fetchOffers function for testing
 - Designed to be extended with real API integration

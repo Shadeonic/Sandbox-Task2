@@ -11,18 +11,18 @@ A reusable React component built with Shopify Polaris that displays tabular data
 
 ## Props
 
-| Prop            | Type                                      | Description |
-|-----------------|-------------------------------------------|-------------|
-| `contentTypes`  | `('text' \| 'numeric')[]`                 | Defines the type of each column |
-| `headings`      | `(string \| React.ReactNode)[]`           | Column headers |
-| `rows`          | `React.ReactNode[][]`                     | Table data rows |
-| `rowCount`      | `number`                                  | Total number of rows (used for pagination) |
-| `changePage`    | `(page: number, query?: string) => Promise<void>` | Callback for pagination |
-| `paginationMode`| `'client'` \| `'server'`                  | Determines pagination strategy |
-| `searchOffer?`  | `(query: string) => Promise<void>`        | Optional search callback (debounced) |
-| `noResults?`    | `boolean`                                 | Whether to show a "no results" message |
-| `itemsPerPage?` | `number`                                  | Items per page (default: 5) |
-| `loading?`      | `boolean`                                 | Optional external loading trigger |
+| Prop             | Type                                              | Description                                |
+| ---------------- | ------------------------------------------------- | ------------------------------------------ |
+| `contentTypes`   | `('text' \| 'numeric')[]`                         | Defines the type of each column            |
+| `headings`       | `(string \| React.ReactNode)[]`                   | Column headers                             |
+| `rows`           | `React.ReactNode[][]`                             | Table data rows                            |
+| `rowCount`       | `number`                                          | Total number of rows (used for pagination) |
+| `changePage`     | `(page: number, query?: string) => Promise<void>` | Callback for pagination                    |
+| `paginationMode` | `'client'` \| `'server'`                          | Determines pagination strategy             |
+| `searchOffer?`   | `(query: string) => Promise<void>`                | Optional search callback (debounced)       |
+| `noResults?`     | `boolean`                                         | Whether to show a "no results" message     |
+| `itemsPerPage?`  | `number`                                          | Items per page (default: 5)                |
+| `loading?`       | `boolean`                                         | Optional external loading trigger          |
 
 ---
 
@@ -44,3 +44,4 @@ A reusable React component built with Shopify Polaris that displays tabular data
   noResults={false}
 />
 ---
+```

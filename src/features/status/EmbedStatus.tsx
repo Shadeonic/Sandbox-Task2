@@ -9,8 +9,8 @@ import {
   Link,
   Popover,
   Text,
-} from "@shopify/polaris";
-import type { IconSource } from "@shopify/polaris";
+} from '@shopify/polaris';
+import type { IconSource } from '@shopify/polaris';
 import {
   AppExtensionIcon,
   CartIcon,
@@ -20,10 +20,10 @@ import {
   ProductIcon,
   ChatIcon,
   ExternalIcon,
-} from "@shopify/polaris-icons";
-import { useCallback, useState } from "react";
-import "@shopify/polaris/build/esm/styles.css";
-import { getEmbedURLs } from "@/lib/getEmbedURLs";
+} from '@shopify/polaris-icons';
+import { useCallback, useState } from 'react';
+import '@shopify/polaris/build/esm/styles.css';
+import { getEmbedURLs } from '@/lib/getEmbedURLs';
 //Converted to TypeScript - Added proper type annotations for props and data structures
 type PageMap = Record<string, boolean>;
 type AllBlocks = Record<string, PageMap>;
@@ -35,31 +35,37 @@ interface EmbedStatusProps {
 }
 //Introduced optional availablePages prop
 //If not provided, falls back to default pages:
-const defaultPages = ["index", "product", "cart", "collection", "collectionList"];
+const defaultPages = [
+  'index',
+  'product',
+  'cart',
+  'collection',
+  'collectionList',
+];
 
 const pageLabelMap: Record<string, string> = {
-  index: "Home",
-  product: "Product",
-  cart: "Cart",
-  collection: "Collection",
-  collectionList: "Collection List",
+  index: 'Home',
+  product: 'Product',
+  cart: 'Cart',
+  collection: 'Collection',
+  collectionList: 'Collection List',
 };
 
 const blockLabelMap: Record<string, string> = {
-  ugc: "UGC Carousel",
+  ugc: 'UGC Carousel',
 };
 
 const iconMap = (page: string): IconSource => {
   switch (page) {
-    case "index":
+    case 'index':
       return HomeIcon;
-    case "product":
+    case 'product':
       return ProductIcon;
-    case "cart":
+    case 'cart':
       return CartIcon;
-    case "collection":
+    case 'collection':
       return CollectionFeaturedIcon;
-    case "collectionList":
+    case 'collectionList':
       return CollectionListIcon;
     default:
       return AppExtensionIcon;
@@ -100,8 +106,8 @@ export const EmbedStatus: React.FC<EmbedStatusProps> = ({
               Block Status
             </Text>
             <Text as="p" variant="bodyMd" tone="subdued">
-              Enable or disable the block in your theme editor to show or hide it
-              from your store.
+              Enable or disable the block in your theme editor to show or hide
+              it from your store.
             </Text>
           </BlockStack>
 
@@ -134,22 +140,22 @@ export const EmbedStatus: React.FC<EmbedStatusProps> = ({
                         <div
                           key={`${block}-${page}`}
                           style={{
-                            padding: "2px 6px",
-                            borderRadius: "12px",
-                            border: "1px solid #C9CCCF",
-                            backgroundColor: enabled ? "#F0FFF4" : "#F9FAFB",
-                            display: "flex",
-                            alignItems: "center",
-                            gap: "4px",
+                            padding: '2px 6px',
+                            borderRadius: '12px',
+                            border: '1px solid #C9CCCF',
+                            backgroundColor: enabled ? '#F0FFF4' : '#F9FAFB',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '4px',
                           }}
                         >
                           <span
                             style={{
-                              width: "8px",
-                              height: "8px",
-                              borderRadius: "50%",
-                              backgroundColor: enabled ? "#2E7D32" : "#8C9196",
-                              display: "inline-block",
+                              width: '8px',
+                              height: '8px',
+                              borderRadius: '50%',
+                              backgroundColor: enabled ? '#2E7D32' : '#8C9196',
+                              display: 'inline-block',
                               flexShrink: 0,
                             }}
                           />
@@ -174,8 +180,8 @@ export const EmbedStatus: React.FC<EmbedStatusProps> = ({
                         content: pageLabelMap[page] ?? page,
                         onAction: () => {
                           const url =
-                            getEmbedURLs(themeStoreId)?.[block]?.[page];//Made getEmbedURLs dynamic
-                          if (url) window.open(url, "_blank");
+                            getEmbedURLs(themeStoreId)?.[block]?.[page]; //Made getEmbedURLs dynamic
+                          if (url) window.open(url, '_blank');
                         },
                       }))}
                     />
@@ -197,11 +203,7 @@ export const EmbedStatus: React.FC<EmbedStatusProps> = ({
         </Text>
 
         <InlineStack gap="300" align="center">
-          <Link
-            url="https://your-chat-url.com"
-            removeUnderline
-            monochrome
-          >
+          <Link url="https://your-chat-url.com" removeUnderline monochrome>
             <InlineStack gap="100" blockAlign="center">
               <Icon source={ChatIcon} tone="subdued" />
               <Text as="span" variant="bodyMd" tone="subdued">
@@ -210,10 +212,7 @@ export const EmbedStatus: React.FC<EmbedStatusProps> = ({
             </InlineStack>
           </Link>
 
-          <Link
-            url="https://your-help-page.com"
-            monochrome
-          >
+          <Link url="https://your-help-page.com" monochrome>
             <InlineStack gap="100" blockAlign="center">
               <Icon source={ExternalIcon} tone="subdued" />
               <Text as="span" variant="bodyMd" tone="subdued">
@@ -228,7 +227,6 @@ export const EmbedStatus: React.FC<EmbedStatusProps> = ({
           documentation
         </Text>
       </BlockStack>
-
     </BlockStack>
   );
 };

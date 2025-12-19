@@ -79,7 +79,6 @@ describe('FaqWidget', () => {
     expect(chevron.className).not.toContain('rotate-180');
     fireEvent.click(firstQuestion);
     expect(chevron.className).toContain('rotate-180');
-
   });
 
   it('calls sendEvent when a question is clicked', () => {
@@ -92,22 +91,28 @@ describe('FaqWidget', () => {
   });
 
   it('sets aria-expanded correctly on toggle', () => {
-  const toggleButton = screen.getByRole('button', {
-    name: /how do i enable the app embed/i,
-  });
+    const toggleButton = screen.getByRole('button', {
+      name: /how do i enable the app embed/i,
+    });
 
-  expect(toggleButton).toHaveAttribute('aria-expanded', 'false');
-  fireEvent.click(toggleButton);
-  expect(toggleButton).toHaveAttribute('aria-expanded', 'true');
+    expect(toggleButton).toHaveAttribute('aria-expanded', 'false');
+    fireEvent.click(toggleButton);
+    expect(toggleButton).toHaveAttribute('aria-expanded', 'true');
   });
 
   it('toggles FAQ with Enter and Space keys', () => {
     const firstQuestion = screen.getByText('How do I enable the App Embed?');
 
     fireEvent.keyDown(firstQuestion.parentElement!, { key: 'Enter' });
-    expect(document.getElementById('faq-0')).toHaveAttribute('aria-hidden', 'false');
+    expect(document.getElementById('faq-0')).toHaveAttribute(
+      'aria-hidden',
+      'false'
+    );
 
     fireEvent.keyDown(firstQuestion.parentElement!, { key: ' ' });
-    expect(document.getElementById('faq-0')).toHaveAttribute('aria-hidden', 'true');
+    expect(document.getElementById('faq-0')).toHaveAttribute(
+      'aria-hidden',
+      'true'
+    );
   });
 });

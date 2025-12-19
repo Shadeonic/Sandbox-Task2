@@ -76,7 +76,10 @@ export const Table: React.FC<TableProps> = ({
   const [loading, setLoading] = useState<boolean>(false);
   const [search, setSearch] = useState<string>('');
   const debouncedSearch = useDebounce(search, 500);
-  const [searching, setSearching] = useState<{ query: string; isSearching: boolean }>({
+  const [searching, setSearching] = useState<{
+    query: string;
+    isSearching: boolean;
+  }>({
     query: '',
     isSearching: false,
   });
@@ -174,7 +177,8 @@ export const Table: React.FC<TableProps> = ({
       row.map((cell, i) => (
         <div
           key={i}
-          className="flex items-center justify-start text-left w-full h-full">
+          className="flex items-center justify-start text-left w-full h-full"
+        >
           {cell}
         </div>
       ))
@@ -198,8 +202,8 @@ export const Table: React.FC<TableProps> = ({
           loading
             ? skeletonRows
             : paginationMode === 'client'
-            ? wrapRows(displayRows)
-            : wrapRows(rows)
+              ? wrapRows(displayRows)
+              : wrapRows(rows)
         }
         footerContent={
           <InlineStack align="center" wrap={false} gap="400">
@@ -217,47 +221,47 @@ export const Table: React.FC<TableProps> = ({
   );
 
   if (searchOffer) {
-  return (
-    <Card>
-      <InlineStack align="start" blockAlign="center" gap="200" wrap={false}>
-        <Box width="100%">
-          <TextField
-            label={t('Search') || 'Search'}
-            placeholder={t('Search Offers') || 'Search'}
-            value={search}
-            onChange={setSearch}
-            autoComplete="off"
+    return (
+      <Card>
+        <InlineStack align="start" blockAlign="center" gap="200" wrap={false}>
+          <Box width="100%">
+            <TextField
+              label={t('Search') || 'Search'}
+              placeholder={t('Search Offers') || 'Search'}
+              value={search}
+              onChange={setSearch}
+              autoComplete="off"
+            />
+          </Box>
+          <Button
+            onClick={() => executeSearch(search)}
+            size="large"
+            variant="primary"
+            icon={SearchIcon}
           />
-        </Box>
-        <Button
-          onClick={() => executeSearch(search)}
-          size="large"
-          variant="primary"
-          icon={SearchIcon}
-        />
-      </InlineStack>
+        </InlineStack>
 
-      {noResults ? (
-        <InlineError
-          message={t('Table.noOffers') || 'No offers found'}
-          fieldID="offersTable"
-        />
-      ) : (
-        tableContent
-      )}
-    </Card>
-  );
+        {noResults ? (
+          <InlineError
+            message={t('Table.noOffers') || 'No offers found'}
+            fieldID="offersTable"
+          />
+        ) : (
+          tableContent
+        )}
+      </Card>
+    );
   }
 
   if (noResults) {
-  return (
-    <InlineError
-      message={t('Table.noOffers') || 'No offers found'}
-      fieldID="offersTable"
-    />
-  );
-}
+    return (
+      <InlineError
+        message={t('Table.noOffers') || 'No offers found'}
+        fieldID="offersTable"
+      />
+    );
+  }
 
-// ✅ Fallback return
-return tableContent;
+  // ✅ Fallback return
+  return tableContent;
 };

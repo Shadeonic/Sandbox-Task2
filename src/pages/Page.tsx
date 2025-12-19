@@ -20,7 +20,6 @@ import ToggleStatus from '@/features/table/ToggleStatus';
  * Represents a single offer displayed in the table.
  */
 
-
 /**
  * Demo page that renders the Table component with mock offer data.
  * Supports client-side pagination and server-style search simulation.

@@ -13,7 +13,7 @@ import {
 import { FaqWidgetExample } from '@/features/faq/components/FaqWidget/FaqWidgetExample';
 import { ComponentDetailsPage } from '@/sandbox/pages/ComponentDetailsPage';
 import Page from '@/pages/Page';
-import { EmbedStatus } from "@/features/status/EmbedStatus";
+import { EmbedStatus } from '@/features/status/EmbedStatus';
 
 const mockAllBlocks = {
   ugc: {
@@ -26,7 +26,10 @@ const mockAllBlocks = {
 };
 
 // Error boundary to catch render issues
-class ErrorBoundary extends React.Component<{ children: React.ReactNode }, { error: any }> {
+class ErrorBoundary extends React.Component<
+  { children: React.ReactNode },
+  { error: any }
+> {
   constructor(props: any) {
     super(props);
     this.state = { error: null };
@@ -35,7 +38,7 @@ class ErrorBoundary extends React.Component<{ children: React.ReactNode }, { err
     return { error };
   }
   componentDidCatch(error: any, info: any) {
-    console.error("ErrorBoundary caught:", error, info);
+    console.error('ErrorBoundary caught:', error, info);
   }
   render() {
     if (this.state.error) {
@@ -71,7 +74,10 @@ export function App() {
                 </Link>
               </li>
               <li>
-                <Link to="/embed-status" className="text-blue-600 hover:underline">
+                <Link
+                  to="/embed-status"
+                  className="text-blue-600 hover:underline"
+                >
                   Embed Status
                 </Link>
               </li>

@@ -38,10 +38,9 @@ export const FaqWidget: React.FC<FaqWidgetProps> = ({ faqs }) => {
 
   //reduce dry
   const handleInteraction = (index: number) => {
-  handleToggle(index);
-  sendEvent('faq_question_click', { question: faqs[index].question });
-};
-
+    handleToggle(index);
+    sendEvent('faq_question_click', { question: faqs[index].question });
+  };
 
   return (
     <BlockStack gap="400">
@@ -77,8 +76,8 @@ export const FaqWidget: React.FC<FaqWidgetProps> = ({ faqs }) => {
                   <span
                     data-testid={`faq-chevron-${index}`}
                     className={`inline-block transition-transform duration-300 ${
-                    index === openIdx ? 'rotate-180' : ''
-                  }`}
+                      index === openIdx ? 'rotate-180' : ''
+                    }`}
                   >
                     <Icon source={ChevronDownIcon} tone="base" />
                   </span>
