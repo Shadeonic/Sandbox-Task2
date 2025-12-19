@@ -15,7 +15,6 @@ if (container) {
         fontFamily: 'system-ui, Avenir, Helvetica, Arial, sans-serif',
         lineHeight: 1.5,
         fontWeight: 400,
-        backgroundColor: 'white',
         WebkitFontSmoothing: 'antialiased',
         MozOsxFontSmoothing: 'grayscale',
         margin: 0,
